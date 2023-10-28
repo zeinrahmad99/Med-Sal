@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('patiant_id')->nullable()->constrained('users', 'id')->nullOnDelete();
+            $table->foreignId('patient_id')->nullable()->constrained('users', 'id')->nullOnDelete();
             $table->string('location');
             $table->enum('status', ['under delivery', 'delivered', 'pending', 'accepted', 'canceled']);
             $table->timestamps();
