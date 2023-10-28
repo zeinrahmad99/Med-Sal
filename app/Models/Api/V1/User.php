@@ -18,9 +18,9 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
         'email',
         'password',
+        'role',
     ];
 
     /**
@@ -42,4 +42,25 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function admins(): HasMany
+    {
+        return $this->hasMany(Admin::class, 'admin_id');
+    }
+    public function carts(): HasMany
+    {
+        return $this->hasMany(Cart::class, 'user_id');
+    }
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class,'patient_id');
+    }
+    public function appointments(): HasMany
+    {
+        return $this->hasMany(Appointment::class, 'patient_id');
+    }
+    public function providers(): HasMany
+    {
+        return $this->hasMany(Provider::class, 'user_id');
+    }
 }
