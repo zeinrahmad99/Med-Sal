@@ -4,6 +4,8 @@ namespace App\Models\Api\V1;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Service extends Model
 {
@@ -16,8 +18,8 @@ class Service extends Model
         'description',
         'description_ar',
         'price',
-        'discount',
         'status',
+        // 'discount',
     ];
 
     public function appointments(): HasMany
