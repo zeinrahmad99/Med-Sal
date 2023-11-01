@@ -13,15 +13,15 @@ class Admin extends Model
          'role_id'
         ];
 
-    public function role(): BelongsTo
+    public function role()
     {
-        return $this->belongsTo(Role::class);
+        return $this->belongsTo(Role::class,'role_id');
     }
-    public function user(): BelongsTo
+    public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class,'admin_id');
     }
-     public function categories(): HasMany
+     public function categories()
     {
         return $this->hasMany(Category::class, 'admin_id');
     }

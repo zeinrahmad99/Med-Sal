@@ -14,12 +14,12 @@ class Order extends Model
         'status',
     ];
 
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
+    public function user()
+     {
+        return $this->belongsTo(User::class,'patient_id');
     }
 
-    public function products(): BelongsToMany
+    public function products()
     {
         return $this->belongsToMany(Product::class,'order_product');
     }

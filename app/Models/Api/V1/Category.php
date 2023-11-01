@@ -19,20 +19,20 @@ class Category extends Model
         'status',
     ];
 
-    public function admin(): BelongsTo
+    public function admin()
     {
-        return $this->belongsTo(Admin::class);
+        return $this->belongsTo(Admin::class,'admin_id');
     }
 
-    public function providers(): HasMany
+    public function providers()
     {
         return $this->hasMany(Provider::class, 'service_type_id');
     }
-    public function products(): HasMany
+    public function products()
     {
         return $this->hasMany(Product::class, 'category_id');
     }
-    public function services(): HasMany
+    public function services()
     {
         return $this->hasMany(Service::class, 'category_id');
     }

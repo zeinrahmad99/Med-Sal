@@ -1,0 +1,43 @@
+<?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use App\Models\Api\V1\Role;
+use App\Models\Api\V1\Permission;
+
+class PermissionSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     */
+    public function run(): void
+    {
+       $provider=Role::where('name','provider')->first();
+       $admin=Role::where('name','admin')->first();
+       $permission=[
+        ['role_id'=>$admin->id,'ability'=>'view products','ability_ar'=>'عرض المنتاجات'],
+        ['role_id'=>$admin->id,'ability'=>'view services','ability_ar'=>'عرض الخدمات'],
+        ['role_id'=>$admin->id,'ability'=>'user management','ability_ar'=>'إدارة مقدمي الخدمة'],
+        ['role_id'=>$provider->id,'ability'=>'view products','ability_ar'=>'عرض المنتجات'],
+        ['role_id'=>$provider->id,'ability'=>'add product','ability_ar'=>'إضافة منتج'],
+        ['role_id'=>$provider->id,'ability'=>'update product','ability_ar'=>'تعديل منتج'],
+        ['role_id'=>$provider->id,'ability'=>'remove product','ability_ar'=>'حذف منتج'],
+        ['role_id'=>$provider->id,'ability'=>'delete product','ability_ar'=>'حذف نهائي للمنتج'],
+        ['role_id'=>$provider->id,'ability'=>'view services','ability_ar'=>'عرض الخدمات'],
+        ['role_id'=>$provider->id,'ability'=>'add service','ability_ar'=>'إضافة خدمة'],
+        ['role_id'=>$provider->id,'ability'=>'update service','ability_ar'=>'تعديل خدمة'],
+        ['role_id'=>$provider->id,'ability'=>'remove service','ability_ar'=>'حذف خدمة'],
+        ['role_id'=>$provider->id,'ability'=>'delete service','ability_ar'=>'حذف نهائي للخدمة'],
+        ['role_id'=>$provider->id,'ability'=>'edit personal data','ability_ar'=>'تعديل البيانات الخاصة'],
+        ['role_id'=>$provider->id,'ability'=>'approve order','ability_ar'=>'قبول الطلب'],
+        ['role_id'=>$provider->id,'ability'=>'reject order','ability_ar'=>'رفض الطلب'],
+        ['role_id'=>$provider->id,'ability'=>'approve service','ability_ar'=>'قبول الخدمة'],
+        ['role_id'=>$provider->id,'ability'=>'reject service','ability_ar'=>'رفض الخدمة'],
+    ];
+
+       Permission::insert($permission);
+    }
+}

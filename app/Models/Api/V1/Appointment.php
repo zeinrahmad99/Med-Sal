@@ -15,12 +15,12 @@ class Appointment extends Model
         'service_id'
     ];
 
-    public function user(): BelongsTo
+    public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class,'patient_id');
     }
-    public function service(): BelongsTo
+    public function service()
     {
-        return $this->belongsTo(Service::class);
+        return $this->belongsTo(Service::class,'service_id');
     }
 }

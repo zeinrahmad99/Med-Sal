@@ -49,23 +49,23 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at',
     ];
 
-    public function admins(): HasMany
+    public function admins()
     {
         return $this->hasMany(Admin::class, 'admin_id');
     }
-    public function carts(): HasMany
+    public function carts()
     {
         return $this->hasMany(Cart::class, 'user_id');
     }
-    public function orders(): HasMany
+    public function orders()
     {
         return $this->hasMany(Order::class,'patient_id');
     }
-    public function appointments(): HasMany
+    public function appointments()
     {
         return $this->hasMany(Appointment::class, 'patient_id');
     }
-    public function providers(): HasMany
+    public function providers()
     {
         return $this->hasMany(Provider::class, 'user_id');
     }
