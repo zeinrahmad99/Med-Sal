@@ -23,22 +23,22 @@ class Provider extends Model
         'document'
     ];
 
-    public function user(): BelongsTo
+    public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class,'user_id');
     }
 
-    public function serviceLocations(): HasMany
+    public function serviceLocations()
     {
         return $this->hasMany(serviceLocation::class, 'provider_id');
     }
 
-    public function category(): BelongsTo
+    public function category()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Category::class,'service_type_id');
     }
 
-    public function products(): HasMany
+    public function products()
     {
         return $this->hasMany(Product::class, 'provider_id');
     }
