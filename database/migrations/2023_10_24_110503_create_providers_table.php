@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -16,12 +15,12 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->foreignId('service_type_id')->constrained('categories', 'id')->cascadeOnDelete();
             $table->string('bussiness_name');
-            $table->string('bussiness_name_ar');
             $table->string('contact_number');
             $table->string('bank_name');
             $table->string('iban');
             $table->string('swift_code');
-            $table->enum('status', ['active', 'blocked'])->default('active');
+            $table->enum('status', ['pending', 'active', 'blocked'])->default('pending');
+            $table->string('document');
             $table->timestamps();
         });
     }
