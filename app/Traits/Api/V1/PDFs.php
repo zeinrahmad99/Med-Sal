@@ -1,5 +1,5 @@
 <?php
-namespace App\Traits;
+namespace App\Traits\Api\V1;
 
 use Illuminate\Support\Facades\Storage;
 

@@ -47,12 +47,29 @@ class ProductController extends Controller
     }
 
 
-    public function delete(Product $product)
+    public function delete(int $id)
     {
-        $product->delete();
+        $product = Product::where('id', $id)->first();
+
+        if (!$product) {
+            return response()->json([
+                'status' => 0,
+                'message' => 'عذراً يوجد خطأ ما'
+            ]);
+        }
+
+        $product = $product->delete();
+
+        if (!$product) {
+            return response()->json([
+                'status' => 0,
+                'message' => 'عذراً يوجد خطأ ما'
+            ]);
+        }
 
         return response()->json([
             'status' => 1,
         ]);
     }
+
 }

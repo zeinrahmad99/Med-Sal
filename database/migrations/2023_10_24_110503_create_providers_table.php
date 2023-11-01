@@ -21,6 +21,7 @@ return new class extends Migration {
             $table->string('swift_code');
             $table->enum('status', ['pending', 'active', 'blocked'])->default('pending');
             $table->string('document');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

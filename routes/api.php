@@ -3,8 +3,10 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\CartController;
 use App\Http\Controllers\Api\V1\ProductController;
 use App\Http\Controllers\Api\V1\ServiceController;
+use App\Http\Controllers\Api\V1\ProviderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,10 +45,17 @@ Route::post('/register/provider', [AuthController::class, 'registerProvider']);
 Route::get('/services', [ServiceController::class, 'index']);
 Route::post('/services', [ServiceController::class, 'store']);
 Route::patch('/services/{id}', [ServiceController::class, 'update']);
-Route::delete('/services/{service}', [ServiceController::class, 'delete']);
+Route::delete('/services/{id}', [ServiceController::class, 'delete']);
 
 
 Route::get('/products', [ProductController::class, 'index']);
 Route::post('/products', [ProductController::class, 'store']);
 Route::put('/products/{id}', [ProductController::class, 'update']);
 Route::delete('/products/{id}', [ProductController::class, 'delete']);
+
+Route::get('/carts', [CartController::class, 'index']);
+Route::post('/carts', [CartController::class, 'store']);
+Route::delete('/carts/{id}', [CartController::class, 'delete']);
+
+Route::delete('/providers/{id}', [ProviderController::class, 'delete']);
+Route::put('/providers/{id}', [ProviderController::class, 'update']);
