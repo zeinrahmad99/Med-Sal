@@ -20,17 +20,17 @@ class Service extends Model
         'status',
     ];
 
-    public function appointments(): HasMany
+    public function appointments()
     {
         return $this->hasMany(Appointment::class, 'service_id');
     }
-    public function serviceLocation(): BelongsTo
+    public function serviceLocation()
     {
-        return $this->belongsTo(ServiceLocation::class);
+        return $this->belongsTo(ServiceLocation::class,'service_location_id');
     }
-     public function category(): BelongsTo
+     public function category()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Category::class,'category_id');
     }
 
 

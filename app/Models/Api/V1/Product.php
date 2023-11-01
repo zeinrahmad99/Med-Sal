@@ -20,21 +20,21 @@ class Product extends Model
         'status',
     ];
 
-    public function provider(): BelongsTo
+    public function provider()
     {
-        return $this->belongsTo(Provider::class);
+        return $this->belongsTo(Provider::class,'provider_id');
     }
-    public function category(): BelongsTo
+    public function category()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Category::class,'category_id');
     }
 
-    public function carts(): HasMany
+    public function carts()
     {
         return $this->hasMany(Cart::class, 'product_id');
     }
 
-    public function orders(): BelongsToMany
+    public function orders()
     {
         return $this->belongsToMany(Order::class, 'order_product');
     }

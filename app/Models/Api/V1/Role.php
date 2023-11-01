@@ -13,12 +13,12 @@ class Role extends Model
         'name_ar',
     ];
 
-    public function permissions(): HasMany
+    public function permissions()
     {
         return $this->hasMany(Permission::class, 'role_id');
     }
 
-    public function admins(): HasMany
+    public function admins()
     {
         return $this->hasMany(Admin::class, 'role_id');
     }

@@ -12,11 +12,11 @@ class ServiceLocation extends Model
         'provider_id',
         'location',
     ];
-    public function provider(): BelongsTo
+    public function provider()
     {
-        return $this->belongsTo(Provider::class);
+        return $this->belongsTo(Provider::class,'provider_id');
     }
-    public function services(): HasMany
+    public function services()
     {
         return $this->hasMany(Service::class, 'service_location_id');
     }
