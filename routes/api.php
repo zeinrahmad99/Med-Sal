@@ -58,4 +58,4 @@ Route::post('/carts', [CartController::class, 'store']);
 Route::delete('/carts/{id}', [CartController::class, 'delete']);
 
 Route::delete('/providers/{id}', [ProviderController::class, 'delete']);
-Route::put('/providers/{id}', [ProviderController::class, 'update']);
+Route::post('/providers/{id}', [ProviderController::class, 'updateRequest']);
