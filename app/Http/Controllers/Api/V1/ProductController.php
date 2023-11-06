@@ -20,6 +20,16 @@ class ProductController extends Controller
         ]);
     }
 
+    public function show($id)
+    {
+        $product = Product::where('id', $id)->first();
+
+        return response()->json([
+            'status' => 1,
+            'product' => $product,
+        ]);
+    }
+
     public function store(CreateProductRequest $request)
     {
         $data = array_merge($request->all(), ['status' => 'pending']);

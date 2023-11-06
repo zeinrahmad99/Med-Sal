@@ -46,6 +46,6 @@ class Provider extends Model
 
     public function updateRequests()
     {
-        return $this->hasMany(UpdateRequest::class);
+        return $this->hasMany(ProviderProfileUpdateRequest::class);
     }
 }

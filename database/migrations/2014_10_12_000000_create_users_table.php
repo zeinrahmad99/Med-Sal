@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('password');
             $table->enum('role', ['admin', 'provider', 'patient'])->default('patient');
             $table->rememberToken();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

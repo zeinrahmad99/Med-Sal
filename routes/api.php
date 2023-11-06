@@ -7,8 +7,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // TokenAuth
     include __DIR__ . '/developers/Api/V1/TokenAuth.php';
-
-
 });
 
 // Auth
@@ -25,3 +23,9 @@ include __DIR__ . '/developers/Api/V1/Product.php';
 
 // Cart
 include __DIR__ . '/developers/Api/V1/Cart.php';
+
+// User
+include __DIR__ . '/developers/Api/V1/User.php';
+
+// Permission
+include __DIR__ . '/developers/Api/V1/Permission.php';
