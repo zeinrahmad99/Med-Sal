@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('patient_id')->nullable()->constrained('users', 'id')->nullOnDelete();
             $table->string('location');
-            $table->enum('status', ['under delivery', 'delivered', 'pending', 'accepted', 'canceled']);
             $table->timestamps();
         });
     }

@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('description_ar');
             $table->string('price');
             $table->string('discount')->nullable();
+            $table->integer('quantity');
             $table->enum('status', ['active', 'inactive', 'pending', 'unaccept'])->default('pending');
             $table->timestamps();
         });

@@ -18,15 +18,14 @@ class PermissionSeeder extends Seeder
        $provider=Role::where('name','provider')->first();
        $admin=Role::where('name','admin')->first();
        $permission=[
-        ['role_id'=>$admin->id,'ability'=>'view products','ability_ar'=>'عرض المنتاجات'],
-        ['role_id'=>$admin->id,'ability'=>'view services','ability_ar'=>'عرض الخدمات'],
-        ['role_id'=>$admin->id,'ability'=>'user management','ability_ar'=>'إدارة مقدمي الخدمة'],
-        ['role_id'=>$provider->id,'ability'=>'view products','ability_ar'=>'عرض المنتجات'],
+        ['role_id'=>$admin->id,'ability'=>'view products and services','ability_ar'=>' عرض المنتاجات والخدمات'],
+        ['role_id'=>$admin->id,'ability'=>'accept provider register','ability_ar'=>'قبول مزود خدمة'],
+        ['role_id'=>$admin->id,'ability'=>'reject provider register','ability_ar'=>'رفض مزود خدمة'],
+        ['role_id'=>$provider->id,'ability'=>'view products and services','ability_ar'=>'عرض المنتجات و الخدمات'],
         ['role_id'=>$provider->id,'ability'=>'add product','ability_ar'=>'إضافة منتج'],
         ['role_id'=>$provider->id,'ability'=>'update product','ability_ar'=>'تعديل منتج'],
         ['role_id'=>$provider->id,'ability'=>'remove product','ability_ar'=>'حذف منتج'],
         ['role_id'=>$provider->id,'ability'=>'delete product','ability_ar'=>'حذف نهائي للمنتج'],
-        ['role_id'=>$provider->id,'ability'=>'view services','ability_ar'=>'عرض الخدمات'],
         ['role_id'=>$provider->id,'ability'=>'add service','ability_ar'=>'إضافة خدمة'],
         ['role_id'=>$provider->id,'ability'=>'update service','ability_ar'=>'تعديل خدمة'],
         ['role_id'=>$provider->id,'ability'=>'remove service','ability_ar'=>'حذف خدمة'],
