@@ -13,7 +13,7 @@ use App\Http\Requests\Api\V1\LoginRequest;
 use App\Http\Requests\Api\V1\VerifyRequest;
 use App\Http\Requests\Api\V1\RegisterPatientRequest;
 use App\Http\Requests\Api\V1\RegisterProviderRequest;
-use App\Traits\PDFs;
+use App\Traits\Api\V1\PDFs;
 
 class AuthController extends Controller
 {
@@ -108,6 +108,7 @@ class AuthController extends Controller
     public function refresh(Request $request)
     {
         $user = $request->user();
+        $user->tokens()->delete();
         $token = $user->createToken('api_token')->plainTextToken;
 
         return response()->json([

@@ -20,6 +20,17 @@ class ServiceController extends Controller
         ]);
     }
 
+    public function show($id)
+    {
+        $service = Service::where('id', $id)->first();
+
+
+        return response()->json([
+            'status' => 1,
+            'service' => $service,
+        ]);
+    }
+
     public function store(CreateServiceRequest $request)
     {
         $data = array_merge($request->all(), ['status' => 'pending']);
@@ -48,12 +59,30 @@ class ServiceController extends Controller
     }
 
 
-    public function delete(Service $service)
+    public function delete(int $id)
     {
-        $service->delete();
+        $service = Service::where('id', $id)->first();
+
+        if (!$service) {
+            return response()->json([
+                'status' => 0,
+                'message' => 'عذراً يوجد خطأ ما'
+            ]);
+        }
+
+        $service = $service->delete();
+
+        if (!$service) {
+            return response()->json([
+                'status' => 0,
+                'message' => 'عذراً يوجد خطأ ما'
+            ]);
+        }
 
         return response()->json([
             'status' => 1,
         ]);
+
     }
+
 }

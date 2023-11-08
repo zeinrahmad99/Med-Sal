@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Provider extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'user_id',
@@ -41,5 +42,10 @@ class Provider extends Model
     public function products()
     {
         return $this->hasMany(Product::class, 'provider_id');
+    }
+
+    public function updateRequests()
+    {
+        return $this->hasMany(ProviderProfileUpdateRequest::class);
     }
 }

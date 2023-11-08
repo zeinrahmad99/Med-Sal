@@ -20,6 +20,16 @@ class ProductController extends Controller
         ]);
     }
 
+    public function show($id)
+    {
+        $product = Product::where('id', $id)->first();
+
+        return response()->json([
+            'status' => 1,
+            'product' => $product,
+        ]);
+    }
+
     public function store(CreateProductRequest $request)
     {
         $data = array_merge($request->all(), ['status' => 'pending']);
@@ -47,12 +57,29 @@ class ProductController extends Controller
     }
 
 
-    public function delete(Product $product)
+    public function delete(int $id)
     {
-        $product->delete();
+        $product = Product::where('id', $id)->first();
+
+        if (!$product) {
+            return response()->json([
+                'status' => 0,
+                'message' => 'عذراً يوجد خطأ ما'
+            ]);
+        }
+
+        $product = $product->delete();
+
+        if (!$product) {
+            return response()->json([
+                'status' => 0,
+                'message' => 'عذراً يوجد خطأ ما'
+            ]);
+        }
 
         return response()->json([
             'status' => 1,
         ]);
     }
+
 }
