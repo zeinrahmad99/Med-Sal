@@ -29,3 +29,6 @@ include __DIR__ . '/developers/Api/V1/User.php';
 
 // Permission
 include __DIR__ . '/developers/Api/V1/Permission.php';
+
+// Role
+include __DIR__ . '/developers/Api/V1/Role.php';
