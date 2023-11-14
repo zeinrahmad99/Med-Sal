@@ -10,15 +10,7 @@ use Illuminate\Auth\Access\Response;
 
 class ProductPolicy
 {
-    /**
-     * Determine whether the user can view the model.
-     */
-    public function view(User $user, Product $product): bool
-    {
-        $role= Role::where('name',$user->role)->first();
-        $permission=Permission::where('role_id',$role->id)->where('ability','view products')->first();
-        return ($user->id === $product->provider->user->id && $permission->status === 'allow') || ($product->category->admin_id === $user->id && $permission->status === 'allow');
-    }
+
     /**
      * Determine whether the user can create models.
      */
@@ -41,11 +33,11 @@ class ProductPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Product $product): bool
+    public function remove(User $user, Product $product): bool
     {
         $role= Role::where('name',$user->role)->first();
         $permission=Permission::where('role_id',$role->id)->where('ability','remove product')->first();
-        return $user->id === $product->provider->user->id && $permission->status === 'allow';
+        return  $product->category->admin_id === $user->id && $permission->status === 'allow';
     }
     /**
      * Determine whether the user can permanently delete the model.
@@ -55,5 +47,14 @@ class ProductPolicy
         $role= Role::where('name',$user->role)->first();
         $permission=Permission::where('role_id',$role->id)->where('ability','delete product')->first();
         return $user->id === $product->provider->user->id && $permission->status === 'allow';
+    }
+    /** restore product, make status active */
+
+     public function accepted(User $user, Product $product): bool
+    {
+        $role= Role::where('name',$user->role)->first();
+        $permission=Permission::where('role_id',$role->id)->where('ability','accepted product')->first();
+        return  $product->category->admin_id === $user->id && $permission->status === 'allow';
+
     }
 }

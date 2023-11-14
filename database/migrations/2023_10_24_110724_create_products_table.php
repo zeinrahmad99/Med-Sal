@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('provider_id')->constrained()->cascadeOnDelete();
             $table->foreignId('category_id')->constrained()->cascadeOnDelete();
-            $table->string('title');
-            $table->string('title_ar');
+            $table->string('name');
+            $table->string('name_ar');
             $table->string('description');
             $table->string('description_ar');
             $table->string('price');

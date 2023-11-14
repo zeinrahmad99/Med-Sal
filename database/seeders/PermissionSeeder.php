@@ -21,6 +21,7 @@ class PermissionSeeder extends Seeder
         ['role_id'=>$admin->id,'ability'=>'view products and services','ability_ar'=>' عرض المنتاجات والخدمات'],
         ['role_id'=>$admin->id,'ability'=>'accept provider register','ability_ar'=>'قبول مزود خدمة'],
         ['role_id'=>$admin->id,'ability'=>'reject provider register','ability_ar'=>'رفض مزود خدمة'],
+        ['role_id'=>$admin->id,'ability'=>'accepted product','ability_ar'=>'قبول منتج'],
         ['role_id'=>$provider->id,'ability'=>'view products and services','ability_ar'=>'عرض المنتجات و الخدمات'],
         ['role_id'=>$provider->id,'ability'=>'add product','ability_ar'=>'إضافة منتج'],
         ['role_id'=>$provider->id,'ability'=>'update product','ability_ar'=>'تعديل منتج'],

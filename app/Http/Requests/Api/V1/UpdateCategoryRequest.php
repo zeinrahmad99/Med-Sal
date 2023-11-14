@@ -4,7 +4,7 @@ namespace App\Http\Requests\Api\V1;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateProductRequest extends FormRequest
+class UpdateCategoryRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,16 +22,12 @@ class UpdateProductRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'provider_id' => 'exists:providers,id',
-            'category_id' => 'exists:categories,id',
+            'admin_id'=>'exists:admins,admin_id',
             'name' => 'string',
-            'name_ar' => 'string',
-            'description' => 'string',
-            'description_ar' => 'string',
-            'price' => 'numeric',
-            'status' => 'in:active,inactive,pending,unaccept',
-            // 'discount' => 'nullable|numeric',
-            'quantity' => 'integer'
+            'name_ar' =>'string',
+            'description'=>'string',
+            'description_ar' =>'string',
+            'status' =>'in:active,inactive,archived',
         ];
     }
 }

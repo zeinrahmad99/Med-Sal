@@ -24,11 +24,12 @@ class CreateProductRequest extends FormRequest
         return [
             'provider_id' => 'required|exists:providers,id',
             'category_id' => 'required|exists:categories,id',
-            'title' => 'required|string',
-            'title_ar' => 'required|string',
+            'name' => 'required|string',
+            'name_ar' => 'required|string',
             'description' => 'required|string',
             'description_ar' => 'required|string',
             'price' => 'required|numeric',
+            'quantity' =>'required|integer',
             // 'discount' => 'nullable|numeric',
         ];
     }

@@ -32,3 +32,16 @@ include __DIR__ . '/developers/Api/V1/Permission.php';
 
 // Role
 include __DIR__ . '/developers/Api/V1/Role.php';
+
+// Appointment
+include __DIR__ . '/developers/Api/V1/Appointment.php';
+
+// Category
+include __DIR__ . '/developers/Api/V1/Category.php';
+
+// Order
+include __DIR__ . '/developers/Api/V1/Order.php';
+
+// Admin
+include __DIR__ . '/developers/Api/V1/Admin.php';
+
