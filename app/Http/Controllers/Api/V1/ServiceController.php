@@ -18,18 +18,17 @@ class ServiceController extends Controller
         $services = Service::all();
 
         return response()->json([
-            'status' => 1,
+            'status' => $services ? 1 : 0,
             'services' => $services,
         ]);
     }
 
     public function show($id)
     {
-        $service = Service::where('id', $id)->first();
-
+        $service = Service::firstwhere('id', $id);
 
         return response()->json([
-            'status' => 1,
+            'status' => $service ? 1 : 0,
             'service' => $service,
         ]);
     }
@@ -80,7 +79,7 @@ class ServiceController extends Controller
 
     public function delete(int $id)
     {
-        $service = Service::where('id', $id)->first();
+        $service = Service::firstWhere('id', $id);
         try{$this->authorize('forceDelete',$service);
 
         if (!$service) {

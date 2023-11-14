@@ -19,17 +19,17 @@ class ProductController extends Controller
         $products = Product::all();
 
         return response()->json([
-            'status' => 1,
+            'status' => $products ? 1 : 0,
             'products' => $products,
         ]);
     }
 
     public function show($id)
     {
-        $product = Product::where('id', $id)->first();
+        $product = Product::firstwhere('id', $id);
 
         return response()->json([
-            'status' => 1,
+            'status' => $product ? 1 : 0,
             'product' => $product,
         ]);
     }
