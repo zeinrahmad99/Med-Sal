@@ -12,23 +12,41 @@ class RoleController extends Controller
 {
     public function index()
     {
-        $roles = Role::all();
+        try
+        {
+            Gate::authorize('isSuperAdmin');
+            $roles = Role::all();
 
-        return response()->json([
-            'status' => 1,
-            'roles' => $roles,
-        ]);
+            return response()->json([
+                'status' => 1,
+                'roles' => $roles,
+            ]);
+        }catch(\Exception $e){
+            return response()->json([
+                'status'=>0,
+            ]);
+        }
     }
 
     public function show($id)
     {
 
-        $role = Role::where('id', $id)->first();
+        try{
+            Gate::authorize('isSuperAdmin');
+            $role = Role::where('id', $id)->first();
 
-        return response()->json([
-            'status' => 1,
-            'role' => $role->load('permissions'),
-        ]);
+            return response()->json([
+                'status' => 1,
+                'role' => $role->load('permissions'),
+            ]);
+        }
+        catch(\Exception $e)
+        {
+            return response()->json([
+                'status' => 0,
+            ]);
+        }
+
     }
 
     public function update(Role $role, UpdateRoleRequest $request)
@@ -38,6 +56,8 @@ class RoleController extends Controller
 
 
         try {
+            Gate::authorize('isSuperAdmin');
+
             foreach ($request->permissions as $key => $value) {
 
                 if (!in_array($key, $permissions) || !in_array($value, ['allow', 'deny'])) {
@@ -45,7 +65,7 @@ class RoleController extends Controller
                         'status' => 0,
                     ]);
                 }
-                // update the permission 
+                // update the permission
                 $role->permissions()->where('ability', $key)->update([
                     'status' => $value,
                 ]);
