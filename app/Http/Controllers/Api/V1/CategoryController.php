@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Api\V1\Category;
+use App\Classes\Api\V1\CategoryFilter;
 use App\Http\Requests\Api\V1\CreateCategoryRequest;
 use App\Http\Requests\Api\V1\UpdateCategoryRequest;
 use Illuminate\Support\Facades\Gate;
@@ -12,11 +13,12 @@ class CategoryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(CategoryFilter $filters)
     {
-        $categories=Category::all();
+        $categories = Category::filter($filters)->get();
+
         return response()->json([
-            'status'=>1,
+            'status' => 1,
             'categories' => $categories,
         ]);
     }
@@ -30,7 +32,7 @@ class CategoryController extends Controller
             Gate::authorize('isSuperAdmin');
             $data= array_merge($request->all(),['status' => 'active']);
             $category=Category::create($data);
-            return $category;
+            // return $category;
             return response()->json([
                 'status' => 1,
                 'message' =>'Create Category Successfully',

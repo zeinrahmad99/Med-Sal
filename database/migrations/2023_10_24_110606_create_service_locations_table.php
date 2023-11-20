@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('service_locations', function (Blueprint $table) {
             $table->id();
             $table->foreignId('provider_id')->constrained()->cascadeOnDelete();
-            $table->string('location');
+            $table->float('latitude');
+            $table->float('longitude');
             $table->timestamps();
         });
     }
