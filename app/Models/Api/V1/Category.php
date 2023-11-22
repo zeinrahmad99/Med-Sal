@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Classes\Api\V1\QueryFilter; 
+use Illuminate\Database\Eloquent\Builder; 
 
 class Category extends Model
 {
@@ -36,5 +38,11 @@ class Category extends Model
     {
         return $this->hasMany(Service::class, 'category_id');
     }
+
+        //applying filters 
+ 
+        public function ScopeFilter( $query, QueryFilter $filters ) { 
+            return $filters->apply( $query ); 
+        }
 }
 

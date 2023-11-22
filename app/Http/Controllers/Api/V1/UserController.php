@@ -4,29 +4,32 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Models\Api\V1\User;
 use Illuminate\Http\Request;
+use App\Traits\Api\V1\UserAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\UserUpdateRequest;
 
 class UserController extends Controller
 {
+    use UserAction;
+
     public function index()
     {
         $users = User::all();
 
         return response()->json([
-            'status' => 1,
-            'users' => $users,
+            'status' => $users ? 1 : 0,
+            'data' => $users,
         ]);
     }
 
+
     public function show($id)
     {
-        $user = User::where('id', $id)->first();
-
+        $user = User::firstwhere('id', $id);
 
         return response()->json([
-            'status' => 1,
-            'user' => $user,
+            'status' => $user ? 1 : 0,
+            'data' => $user,
         ]);
     }
 
@@ -51,41 +54,33 @@ class UserController extends Controller
         }
 
         if ($request->has('email') && $user->email !== $request->input('email')) {
-            $user->email_verified_at = null;
+            $this->resetEmailVerification($user);
         }
 
         $user->update($data);
 
         return response()->json([
-            'status' => 1,
+            'status' => $user ? 1 : 0,
             'data' => $user,
         ]);
     }
 
-
     public function delete(int $id)
     {
 
-        $user = User::where('id', $id)->first();
+        $user = User::firstWhere('id', $id);
 
         if (!$user) {
             return response()->json([
                 'status' => 0,
-                'message' => 'عذراً يوجد خطأ ما'
+                'message' => 'المستخدم غير موجود'
             ]);
         }
 
-        $user = $user->delete();
-
-        if (!$user) {
-            return response()->json([
-                'status' => 0,
-                'message' => 'عذراً يوجد خطأ ما'
-            ]);
-        }
+        $deleted = $user->delete();
 
         return response()->json([
-            'status' => 1,
+            'status' => $deleted ? 1 : 0,
         ]);
     }
 }

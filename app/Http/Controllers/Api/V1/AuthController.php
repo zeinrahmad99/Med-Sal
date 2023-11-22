@@ -27,11 +27,8 @@ class AuthController extends Controller
             'role' => 'patient',
         ]);
 
-        $verificationCode = mt_rand(100000, 999999);
-        Cache::put('verification_code:' . $user->id, $verificationCode, 60);
+        $this->EmailVerification($user);
 
-
-        event(new Registered($user));
 
         $token = $user->createToken('api_token')->plainTextToken;
 
@@ -41,6 +38,15 @@ class AuthController extends Controller
             'token' => $token,
             'message' => 'تم إرسال رمز التحقق إلى بريدكم'
         ]);
+    }
+
+    private function EmailVerification($user)
+    {
+        $verificationCode = mt_rand(100000, 999999);
+
+        Cache::put('verification_code:' . $user->id, $verificationCode, 60);
+
+        event(new Registered($user));
     }
 
     public function confirmVerificationCode(VerifyRequest $request)

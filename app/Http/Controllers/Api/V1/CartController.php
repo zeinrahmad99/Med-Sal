@@ -11,11 +11,10 @@ class CartController extends Controller
 {
     public function index()
     {
-        // Retrieve all carts
         $carts = Cart::all();
 
         return response()->json([
-            'status' => 1,
+            'status' => $carts ? 1 : 0,
             'carts' => $carts,
         ]);
     }
@@ -27,14 +26,14 @@ class CartController extends Controller
         $cart = Cart::create($data);
 
         return response()->json([
-            'status' => 1,
+            'status' => $cart ? 1 : 0,
             'cart' => $cart
         ]);
     }
 
     public function delete(int $id)
     {
-        $cart = Cart::where('id', $id)->first();
+        $cart = Cart::firstwhere('id', $id);
 
         if (!$cart) {
             return response()->json([
@@ -43,17 +42,10 @@ class CartController extends Controller
             ]);
         }
 
-        $cart = $cart->delete();
-
-        if (!$cart) {
-            return response()->json([
-                'status' => 0,
-                'message' => 'عذراً يوجد خطأ ما'
-            ]);
-        }
+        $deleted = $cart->delete();
 
         return response()->json([
-            'status' => 1,
+            'status' => $deleted ? 1 : 0,
         ]);
     }
 
