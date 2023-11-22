@@ -24,13 +24,13 @@ class AppointmentPolicy
      */
     public function update(User $user, Appointment $appointment): bool
     {
-        return $user->id === $appointment->user_id;
+        return $user->id === $appointment->patient_id;
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Appointment $Appointment): bool
+    public function delete(User $user, Appointment $appointment): bool
     {
        return $appointment->service->serviceLocation->provider->user->id === $user->id;
     }
@@ -38,7 +38,7 @@ class AppointmentPolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function done(User $user, Appointment $Appointment): bool
+    public function done(User $user, Appointment $appointment): bool
     {
         $role= Role::where('name',$user->role)->first();
         $permission=Permission::where('role_id',$role->id)->where('ability','approve service')->first();
@@ -48,7 +48,7 @@ class AppointmentPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function canceled(User $user, Appointment $Appointment): bool
+    public function canceled(User $user, Appointment $appointment): bool
     {
         $role= Role::where('name',$user->role)->first();
         $permission=Permission::where('role_id',$role->id)->where('ability','reject service')->first();

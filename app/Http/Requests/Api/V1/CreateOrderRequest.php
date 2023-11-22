@@ -22,7 +22,6 @@ class CreateOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'patient_id' => 'required|exists:users,id',
             'location' => 'required|string',
         ];
     }

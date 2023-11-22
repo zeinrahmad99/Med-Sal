@@ -22,7 +22,6 @@ class UpdateOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'patient_id' => 'exists:users,id',
             'location' => 'string',
         ];
     }

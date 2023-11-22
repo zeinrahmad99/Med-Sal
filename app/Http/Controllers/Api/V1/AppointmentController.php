@@ -11,6 +11,7 @@ use App\Http\Requests\Api\V1\UpdateAppointmentRequest;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Notifications\Api\V1\AppointmentNotification;
 
 class AppointmentController extends Controller
 {
@@ -21,15 +22,12 @@ class AppointmentController extends Controller
     {
         try{
         Gate::allows('isProvider');
-            $appointments=Appointment::all();
-            foreach($appointments as $appointment)
-            {
-                if(Auth::id() == $appointment->service->serviceLocation->provider->user_id)
-                $k[]=$appointment;
-            }
+            $app=Appointment::whereHas('service.serviceLocation.provider.user',function($query){
+                $query->where('id',Auth::id());
+            })->get();
             return response()->json([
                 'status' => 1,
-                'appointments' => $k,
+                'appointments' => $app,
             ]);
         }catch(\Exception $e)
             {
@@ -43,13 +41,13 @@ class AppointmentController extends Controller
       /**add new appointment */
     public function store(CreateAppointmentRequest $request)
     {
-        $data = array_merge($request->all(), ['status' => 'valid']);
+        $data = array_merge($request->all(), ['patient_id' => Auth::id() ,'status' => 'valid']);
         return DB::transaction(function () use ($data)
         {
             $appointment = Appointment::create($data);
 
             $provider= $appointment->service->serviceLocation->provider->user;
-            $provider->notify(new activeNotification($appointment));
+            $provider->notify(new AppointmentNotification($appointment));
             return response()->json([
                 'status' => 1,
                 'message'=>'Add Appointment Successfully',
@@ -62,18 +60,18 @@ class AppointmentController extends Controller
      * Display the specified resource.
      */
     public function show($id)
-    {    $appointment=Appointment::findOrfail($id);
+    {
         try{
-
+            $appointment=Appointment::findOrfail($id);
             $this->authorize('view',$appointment);
             return response()->json([
                 'status' => 1,
                 'appointment' => $appointment,
             ]);
-    }catch(\Exception $e){
-            return response()->json([
-                'status' => 0,
-            ]);
+        }catch(\Exception $e){
+                return response()->json([
+                    'status' => 0,
+                ]);
         }
     }
 
@@ -82,10 +80,10 @@ class AppointmentController extends Controller
      */
     public function update(UpdateAppointmentRequest $request,$id)
     {
-        $appointment = Appointment::findOrfail($id);
         try{
+            $appointment = Appointment::findOrfail($id);
             $this->authorize('update',$appointment);
-            $data = $request->except('status');
+            $data=$request->all();
             $appointment->update($data);
             return response()->json([
                 'status' => 1,
@@ -104,8 +102,9 @@ class AppointmentController extends Controller
      */
     public function delete($id)
     {
-        $appointment=Appointment::findOrfail($id);
+
         try{
+            $appointment=Appointment::findOrfail($id);
             $this->authorize('delete',$appointment);
             $appointment->delete();
             return response()->json([
@@ -122,8 +121,9 @@ class AppointmentController extends Controller
     /** change a status appointment to done  */
 
     public function doneAppointment($id){
-        $appointment=Appointment::find($id);
+
         try{
+            $appointment=Appointment::find($id);
             $this->authorize('done',$appointment);
             $appointment->update(['status'=>'done']);
             return response()->json([
@@ -139,8 +139,9 @@ class AppointmentController extends Controller
     /**change status appointment to canceled */
 
     public function cancelAppointment($id){
-        $appointment=Appointment::find($id);
+
         try{
+            $appointment=Appointment::find($id);
             $this->authorize('canceled',$appointment);
             $appointment->update(['status'=>'canceled']);
             return response()->json([

@@ -22,9 +22,7 @@ class CreateAppointmentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'patient_id'=>'required|exists:users,id',
             'date'=>'required|date_format:Y-m-d',
-            'status' => 'in:valid,done,canceled',
             'service_id'=>'required|exists:services,id',
         ];
     }

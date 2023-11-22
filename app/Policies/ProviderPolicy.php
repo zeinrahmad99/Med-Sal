@@ -41,5 +41,8 @@ class ProviderPolicy
         $permission=Permission::where('role_id',$role->id)->where('ability','reject provider register')->first();
         return $user->role === 'admin' && $user->id === $provider->category->admin->user->id && $permission->status === 'allow';
     }
+    public function c(User $user,Provider $provider){
+        return $user->id === $provider->category->admin_id;
+    }
 
    }

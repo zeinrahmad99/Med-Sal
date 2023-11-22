@@ -12,7 +12,7 @@ use App\Http\Requests\Api\V1\CreateOrderRequest;
 use App\Http\Requests\Api\V1\UpdateOrderRequest;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Auth;
-
+use App\Notifications\Api\V1\OrderNotification;
 
 class OrderController extends Controller
 {
@@ -22,18 +22,28 @@ class OrderController extends Controller
 
     /**show provider order with products which related to provider hisself */
     public function show($id){
-        if(Gate::allows('isProvider'))
-       { $order=Order::findOrfail($id);
-        $products=$order->products;
-        foreach($products as $p){
-            $provider=Provider::find($p->provider_id);
-           if($provider->user_id == Auth::id())
-            $k[]=$p;
+    try
+       {
+         Gate::authorize('isProvider');
+            {
+                 $order=Order::findOrfail($id);
+                $products=$order->products;
+                foreach($products as $product){
+                    $provider=Provider::find($product->provider_id);
+                if($provider->user_id == Auth::id())
+                    $res[]=$product;
+                }
+
+                return response()->json([
+                    'status' => 1,
+                    'order' => $order,
+                 ]);
+            }
+        }catch(\Exception $e){
+            return response()->json([
+                'status' => 0,
+             ]);
         }
-        return response()->json([
-            'status' => 1,
-            'order' => $k,
-        ]);}
     }
     /**
      * Store a newly created resource in storage.
@@ -41,7 +51,7 @@ class OrderController extends Controller
     public function store(CreateOrderRequest $request)
     {
         return DB::transaction(function () use ($request){
-            $data = array_merge($request->all());
+            $data = array_merge($request->all() , ['patient_id' => Auth::id()]);
             $order_products=$request->input('products');
             $order=Order::create($data);
            foreach($order_products as $order_product)
@@ -54,6 +64,8 @@ class OrderController extends Controller
                          ]);
                         $product->quantity =$product->quantity - $order_product['quantity'];
                         $product->save();
+                        $provider=$product->provider->user;
+                        $provider->notify(new OrderNotification($product,'new order store'));
                     }
                     else{
                         DB::rollback();
@@ -80,61 +92,103 @@ class OrderController extends Controller
      */
     public function update(UpdateOrderRequest $request,$id)
     {
-        $order=Order::findOrfail($id);
-        $this->authorize('update',$order);
-        $data=$request->all();
-        $order->update($data);
-        return response()->json([
-            'status' => 1,
-            'message'=>'Update Order Successfully',
-        ]);
+
+        try
+        {
+            $order=Order::findOrfail($id);
+            $this->authorize('update',$order);
+            $data=$request->all();
+            $order->update($data);
+            return response()->json([
+                'status' => 1,
+                'message'=>'Update Order Successfully',
+            ]);
+        }catch(\Exception $e){
+            return response()->json([
+                'status' => 0
+             ]);
+        }
     }
     /**
      * Remove the specified resource from storage.
      */
     public function delete($id)
     {
-       $order=Order::findOrfail($id);
-       $this->authorize('update',$order);
-       $order->delete();
-        return response()->json([
-            'status' => 1,
-            'message'=>'Delete Order Successfully',
 
-        ]);
+        try
+        {       $order=Order::findOrfail($id);
+                $this->authorize('update',$order);
+                $order->delete();
+                return response()->json([
+                    'status' => 1,
+                    'message'=>'Delete Order Successfully',
+
+                ]);
+        }catch(\Exception $e){
+            return response()->json([
+                'status' => 0,
+             ]);
+        }
     }
+
     public function approveOrder($id){
-        $order=Order::find($id);
+        try
+            {
+                $order=Order::find($id);
+                return DB::transaction(function () use ($order){
 
-        foreach($order->products as $product)
-         {
-            $this->authorize('approveOrder',Order::class);
-             if($product->provider->user->id == auth()->id()){
-             $product->pivot->update([
-                'status'=>'accepted',
-             ]);}
+                    foreach($order->products as $product)
+                    {
+                        $this->authorize('approveOrder',Order::class);
+                        if($product->provider->user->id == auth()->id()){
+                        $product->pivot->update([
+                            'status'=>'accepted',
+                        ]);
+                        $user=$order->user;
+                        $user->notify(new OrderNotification($product,'your order accepted'));
+                    }
 
-         }
-         return response()->json([
-             'status'=>1,
-             'massage'=>'Order Accepted Successfully',
-         ]);
+                    }
+                    return response()->json([
+                        'status'=>1,
+                        'massage'=>'Order Accepted Successfully',
+                    ]);
+                });
+            }catch(\Exception $e){
+                return response()->json([
+                    'status'=>0,
+                ]);
+            }
     }
+
     public function rejectOrder($id){
-        $order=Order::find($id);
 
-        foreach($order->products as $product)
-         {
-            $this->authorize('rejectOrder',Order::class);
-             if($product->provider->user->id == auth()->id()){
-             $product->pivot->update([
-                'status'=>'canceled',
-             ]);}
+       try
+        {
+            $order=Order::find($id);
+            return DB::transaction(function () use ($order)
+            {
+                foreach($order->products as $product)
+                {
+                $this->authorize('rejectOrder',Order::class);
+                    if($product->provider->user->id == auth()->id()){
+                    $product->pivot->update([
+                    'status'=>'canceled',
+                    ]);
+                    $user=$order->user;
+                    $user->notify(new OrderNotification($product,'your order canceled'));
+                }
 
-         }
-         return response()->json([
-             'status'=>1,
-             'massage'=>'Order Canceled Successfully',
-         ]);
+                }
+                return response()->json([
+                    'status'=>1,
+                    'massage'=>'Order Canceled Successfully',
+                ]);
+            });
+        }catch(\Exception $e){
+            return response()->json([
+                'status'=>0
+            ]);
+       }
     }
 }

@@ -7,6 +7,16 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // TokenAuth
     include __DIR__ . '/developers/Api/V1/TokenAuth.php';
+
+    // Appointment
+    include __DIR__ . '/developers/Api/V1/Appointment.php';
+
+    // Order
+    include __DIR__ . '/developers/Api/V1/Order.php';
+
+    // Admin
+    include __DIR__ . '/developers/Api/V1/Admin.php';
+
 });
 
 // Auth
@@ -14,9 +24,6 @@ include __DIR__ . '/developers/Api/V1/Auth.php';
 
 // Service
 include __DIR__ . '/developers/Api/V1/Service.php';
-
-// Provider
-include __DIR__ . '/developers/Api/V1/Provider.php';
 
 // Product
 include __DIR__ . '/developers/Api/V1/Product.php';
@@ -33,15 +40,9 @@ include __DIR__ . '/developers/Api/V1/Permission.php';
 // Role
 include __DIR__ . '/developers/Api/V1/Role.php';
 
-// Appointment
-include __DIR__ . '/developers/Api/V1/Appointment.php';
-
 // Category
 include __DIR__ . '/developers/Api/V1/Category.php';
 
-// Order
-include __DIR__ . '/developers/Api/V1/Order.php';
 
-// Admin
-include __DIR__ . '/developers/Api/V1/Admin.php';
-
+ // Provider
+ include __DIR__ . '/developers/Api/V1/Provider.php';
