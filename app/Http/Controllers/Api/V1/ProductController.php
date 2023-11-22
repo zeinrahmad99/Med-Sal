@@ -43,6 +43,11 @@ class ProductController extends Controller
 
             $product = Product::create($data);
 
+            $admin=$product->category->admin->user;
+
+            $admin->notify(new activeNotification($product,'new request for product'));
+
+
             return response()->json([
                 'status' => 1,
                 'product' => $product,
@@ -58,8 +63,8 @@ class ProductController extends Controller
 
     public function update(UpdateProductRequest $request, $id)
     {
-        $product = Product::find($id);
         try{
+            $product = Product::find($id);
             $this->authorize('update',$product);
             $data = $request->except('status');
 
@@ -81,8 +86,9 @@ class ProductController extends Controller
 
     public function delete(int $id)
     {
-        $product = Product::where('id', $id)->first();
+
          try{
+                $product = Product::where('id', $id)->first();
                 $this->authorize('Forcedelete',$product);
                 if (!$product) {
                     return response()->json([
@@ -112,8 +118,9 @@ class ProductController extends Controller
     }
     /**remove product -> make status pending */
     public function remove($id){
-        $product=Product::findOrfail($id);
+
          try{
+               $product=Product::findOrfail($id);
                 $this->authorize('remove',$product);
                 return DB::transaction(function () use ($product)
                 {
@@ -137,9 +144,11 @@ class ProductController extends Controller
     /* restore product make status active */
 
      public function accepted($id){
-        $product=Product::findOrfail($id);
+
         try
-        { $this->authorize('accepted',$product);
+        {
+             $product=Product::findOrfail($id);
+            $this->authorize('accepted',$product);
             return DB::transaction(function () use ($product)
             {
                 $product->update(['status'=>'active']);

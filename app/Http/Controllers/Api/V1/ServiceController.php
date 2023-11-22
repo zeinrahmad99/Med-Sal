@@ -42,6 +42,10 @@ class ServiceController extends Controller
 
         $service = Service::create($data);
 
+        $admin=$service->category->admin->user;
+
+        $admin->notify(new activeNotification($service,'new request for service'));
+
         return response()->json([
             'status' => 1,
             'service' => $service,
@@ -55,8 +59,9 @@ class ServiceController extends Controller
     public function update(UpdateServiceRequest $request, $id)
     {
 
-        $service = Service::find($id);
+
         try{
+        $service = Service::find($id);
         $this->authorize('update',$service);
 
         $data = $request->except('status');
@@ -79,8 +84,10 @@ class ServiceController extends Controller
 
     public function delete(int $id)
     {
-        $service = Service::firstWhere('id', $id);
-        try{$this->authorize('forceDelete',$service);
+
+        try{
+            $service = Service::firstWhere('id', $id);
+            $this->authorize('forceDelete',$service);
 
         if (!$service) {
             return response()->json([
@@ -111,8 +118,9 @@ class ServiceController extends Controller
     /**remove service -> status will be pending*/
 
     public function remove($id){
-        $service=Service::findOrfail($id);
+
         try{
+            $service=Service::findOrfail($id);
             $this->authorize('remove',$service);
             return DB::transaction(function () use ($service)
             {
@@ -137,9 +145,11 @@ class ServiceController extends Controller
     /** restore service -> make status active */
 
     public function accepted($id){
-        $service=Service::findOrfail($id);
+
         try
         {
+
+            $service=Service::findOrfail($id);
             $this->authorize('accepted',$service);
             return DB::transaction(function () use ($service)
             {

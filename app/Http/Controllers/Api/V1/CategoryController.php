@@ -32,11 +32,11 @@ class CategoryController extends Controller
             Gate::authorize('isSuperAdmin');
             $data= array_merge($request->all(),['status' => 'active']);
             $category=Category::create($data);
-            // return $category;
+
             return response()->json([
                 'status' => 1,
                 'message' =>'Create Category Successfully',
-                'category' =>$category,
+
             ]);
         }
         catch(\Exception $e)
