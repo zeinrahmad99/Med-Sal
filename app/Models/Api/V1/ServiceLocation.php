@@ -10,7 +10,8 @@ class ServiceLocation extends Model
     use HasFactory;
     protected $fillable = [
         'provider_id',
-        'location',
+        'latitude',
+        'longitude'
     ];
     public function provider()
     {

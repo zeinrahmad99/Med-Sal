@@ -14,8 +14,14 @@ class PermissionController extends Controller
     {
         try{
             Gate::allows('isSuperAdmin');
-             $permissions = Permission::all();
-
+            if(app()->getLocale() == 'ar')
+            {
+                $permissions=Permission::select('role_id','ability_'.app()->getLocale())->get();
+            }
+            else
+            {
+                $permissions=Permission::select('role_id','ability')->get();
+            }
             return response()->json([
                 'status' => 1,
                 'permissions' => $permissions,

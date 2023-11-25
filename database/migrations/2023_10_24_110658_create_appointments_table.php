@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('appointments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('patient_id')->nullable()->constrained('users', 'id')->nullOnDelete();
-            $table->date('date');
+            $table->date('date'); //dateTime('time')->format('Y-m-d H:i')
             $table->enum('status', ['valid', 'done', 'canceled'])->default('valid');
             $table->foreignId('service_id')->constrained()->cascadeOnDelete();
             $table->timestamps();

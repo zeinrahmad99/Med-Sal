@@ -8,19 +8,35 @@ use App\Classes\Api\V1\CategoryFilter;
 use App\Http\Requests\Api\V1\CreateCategoryRequest;
 use App\Http\Requests\Api\V1\UpdateCategoryRequest;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+
 class CategoryController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      */
     public function index(CategoryFilter $filters)
     {
-        $categories = Category::filter($filters)->get();
+         $categories = Category::filter($filters)->get();
 
         return response()->json([
             'status' => 1,
             'categories' => $categories,
         ]);
+
+      /*   if(app()->getLocale() == 'ar')
+        {
+            $category=Category::select('name_'.app()->getLocale(),'description_'.app()->getLocale())->get();
+        }
+        else
+        {
+            $category=Category::select('name','description')->get();
+
+        }
+        return $category;*/
+
     }
 
     /**
@@ -52,7 +68,15 @@ class CategoryController extends Controller
      */
     public function show($id)
     {
-        $category=Category::findOrfail($id);
+        if(app()->getLocale() == 'ar')
+        {
+            $category=Category::where('id',$id)->select('name_'.app()->getLocale(),'description_'.app()->getLocale())->get();
+        }
+        else
+        {
+            $category=Category::where('id',$id)->select('name','description')->get();
+        }
+
         return response()->json([
             'status' =>1,
             'category'=>$category,

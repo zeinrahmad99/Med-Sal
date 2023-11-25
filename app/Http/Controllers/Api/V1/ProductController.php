@@ -16,7 +16,14 @@ class ProductController extends Controller
 {
     public function index()
     {
-        $products = Product::all();
+        if(app()->getLocale() == 'ar')
+        {
+            $products=Product::select('provider_id','category_id','name_'.app()->getLocale(),'description_'.app()->getLocale(),'price','discount','quantity','status')->get();
+        }
+        else
+        {
+            $products=Product::select('provider_id','category_id','name','description','price','discount','quantity','status')->get();
+        }
 
         return response()->json([
             'status' => $products ? 1 : 0,
@@ -26,7 +33,15 @@ class ProductController extends Controller
 
     public function show($id)
     {
-        $product = Product::firstwhere('id', $id);
+
+        if(app()->getLocale() == 'ar')
+        {
+            $product=Product::firstwhere('id', $id)->select('provider_id','category_id','name_'.app()->getLocale(),'description_'.app()->getLocale(),'price','discount','quantity','status')->first();
+        }
+        else
+        {
+            $product=Product::firstwhere('id', $id)->select('provider_id','category_id','name','description','price','discount','quantity','status')->first();
+        }
 
         return response()->json([
             'status' => $product ? 1 : 0,

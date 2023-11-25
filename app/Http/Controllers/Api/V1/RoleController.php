@@ -7,6 +7,8 @@ use App\Http\Requests\Api\V1\UpdateRoleRequest;
 use Illuminate\Http\Request;
 use App\Models\Api\V1\Role;
 use App\Models\Api\V1\Permission;
+use Illuminate\Support\Facades\Gate;
+
 
 class RoleController extends Controller
 {
@@ -15,7 +17,14 @@ class RoleController extends Controller
         try
         {
             Gate::authorize('isSuperAdmin');
-            $roles = Role::all();
+            if(app()->getLocale() == 'ar')
+            {
+                $roles=Role::select('name_'.app()->getLocale())->get();
+            }
+            else
+            {
+                $roles=Role::select('name')->get();
+            }
 
             return response()->json([
                 'status' => 1,
@@ -32,8 +41,17 @@ class RoleController extends Controller
     {
 
         try{
-            Gate::authorize('isSuperAdmin');
-            $role = Role::where('id', $id)->first();
+           Gate::authorize('isSuperAdmin');
+
+            if(app()->getLocale() == 'ar')
+            {
+                $role=Role::where('id', $id)->select('name_'.app()->getLocale())->first();
+            }
+            else
+            {
+                $role=Role::where('id', $id)->select('name')->first();
+            }
+
 
             return response()->json([
                 'status' => 1,

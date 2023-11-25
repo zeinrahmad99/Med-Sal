@@ -15,7 +15,32 @@ class ServiceController extends Controller
 {
     public function index()
     {
-        $services = Service::all();
+        if(app()->getLocale() == 'ar')
+        {
+            $services=Service::select('category_id','service_location_id','name_'.app()->getLocale(),'description_'.app()->getLocale(),'price','discount','status')->get();;
+        }
+        else
+        {
+            $services=Service::select('category_id','service_location_id','name','description','price','discount','status')->get();;
+
+        }
+
+        return response()->json([
+            'status' => $services ? 1 : 0,
+            'services' => $services,
+        ]);
+    }
+    public function indexAuth()
+    {
+        if(app()->getLocale() == 'ar')
+        {
+            $services=Service::select('category_id','service_location_id','name_'.app()->getLocale(),'description_'.app()->getLocale(),'price','discount','status')->get();;
+        }
+        else
+        {
+            $services=Service::select('category_id','service_location_id','name','description','price','discount','status')->get();;
+
+        }
 
         return response()->json([
             'status' => $services ? 1 : 0,
@@ -25,7 +50,14 @@ class ServiceController extends Controller
 
     public function show($id)
     {
-        $service = Service::firstwhere('id', $id);
+        if(app()->getLocale() == 'ar')
+        {
+            $service=Service::firstWhere('id',$id)->select('category_id','service_location_id','name_'.app()->getLocale(),'description_'.app()->getLocale(),'price','discount','status')->first();
+        }
+        else
+        {
+            $service=Service::firstWhere('id',$id)->select('category_id','service_location_id','name','description','price','discount','status')->first();
+        }
 
         return response()->json([
             'status' => $service ? 1 : 0,
@@ -148,8 +180,7 @@ class ServiceController extends Controller
 
         try
         {
-
-            $service=Service::findOrfail($id);
+           $service=Service::findOrfail($id);
             $this->authorize('accepted',$service);
             return DB::transaction(function () use ($service)
             {

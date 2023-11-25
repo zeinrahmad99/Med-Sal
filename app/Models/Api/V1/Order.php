@@ -11,6 +11,7 @@ class Order extends Model
     protected $fillable=[
         'patient_id',
         'location',
+        'cost'
     ];
 
     public function user()

@@ -13,7 +13,10 @@ use App\Http\Requests\Api\V1\LoginRequest;
 use App\Http\Requests\Api\V1\VerifyRequest;
 use App\Http\Requests\Api\V1\RegisterPatientRequest;
 use App\Http\Requests\Api\V1\RegisterProviderRequest;
+use App\Http\Requests\Api\V1\ChangeLanguage;
 use App\Traits\Api\V1\PDFs;
+use Illuminate\Support\Facades\Auth;
+
 
 class AuthController extends Controller
 {
@@ -172,5 +175,17 @@ class AuthController extends Controller
                 'message' => 'تم إرسال رمز التحقق إلى بريدكم',
             ]);
         });
+    }
+    function changeLang(ChangeLanguage $req){
+       $user=DB::table('languages')->where('user_id',Auth::id())->first();
+       if($req->lang == 'ar' && !$user){
+        DB::table('languages')->insert([
+            'user_id'=>Auth::id(),
+            'lang'=>$req->lang,
+        ]);
+       }
+       else if($req->lang=='en' && $user){
+        DB::table('languages')->where('user_id',Auth::id())->delete();
+       }
     }
 }

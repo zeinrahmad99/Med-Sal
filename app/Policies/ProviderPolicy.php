@@ -13,6 +13,11 @@ class ProviderPolicy
     /**
      * can  view products and services for each provider
      */
+    public function admin(User $user,Provider $provider): bool
+    {
+
+        return $provider->category->admin_id === $user->id;
+    }
     public function view(User $user, Provider $provider): bool
     {
         $role= Role::where('name',$user->role)->first();

@@ -53,6 +53,7 @@ class OrderController extends Controller
         return DB::transaction(function () use ($request){
             $data = array_merge($request->all() , ['patient_id' => Auth::id()]);
             $order_products=$request->input('products');
+            $cost=0;
             $order=Order::create($data);
            foreach($order_products as $order_product)
                 {
@@ -61,7 +62,10 @@ class OrderController extends Controller
                           $order->products()->attach($order->id,
                         ['product_id'=>$order_product['product_id'],
                         'quantity'=>$order_product['quantity'],
+                        'price'=>($product->price * $order_product['quantity']),
                          ]);
+
+                        $cost+=$order_product['price'];
                         $product->quantity =$product->quantity - $order_product['quantity'];
                         $product->save();
                         $provider=$product->provider->user;
@@ -82,7 +86,9 @@ class OrderController extends Controller
                 }
             return response()->json([
                 'status' =>1,
-                'message' => 'Add Order Successfully'
+                'message' => 'Add Order Successfully',
+                'p'=>$price,
+                'cost'=>$cost,
             ]);
     });
 }

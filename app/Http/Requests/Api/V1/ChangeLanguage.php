@@ -4,7 +4,7 @@ namespace App\Http\Requests\Api\V1;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateOrderRequest extends FormRequest
+class ChangeLanguage extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,8 +22,7 @@ class CreateOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'latitude' => 'required|float',
-            'longitude' => 'required|float'
+            'lang'=>'in:ar,en',
         ];
     }
 }

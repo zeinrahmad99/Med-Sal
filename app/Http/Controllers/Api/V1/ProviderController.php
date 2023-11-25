@@ -152,41 +152,57 @@ class ProviderController extends Controller
         }
     }
  /** monthly reports */
- public function reports($month){
 
-    try{
-     Gate::authorize('isAdmin');
-     $categories=Category::where('admin_id',Auth::id())->get();
-     foreach($categories as $category)
-     {    $product[]=DB::table('providers')->where('service_type_id','=',$category->id)->join('products','providers.id','=','products.provider_id')
-         ->join('order_product','products.id','=','order_product.product_id')
-         ->join('orders','order_product.order_id','=','orders.id')->select('providers.bussiness_name','products.title',
-         DB::raw('SUM(order_product.quantity * (products.price - (products.price * products.discount / 100))) as total_amount'))
-         ->whereMonth('orders.created_at',$month)->where('order_product.status','=','accepted')
-         ->groupBy( 'providers.bussiness_name','products.title')
-         ->get();
-         $services=DB::table('providers')->join('service_locations','providers.id','=','service_locations.provider_id')->join(
-             'services','service_locations.id','=','services.service_location_id'
-         )->join('appointments','services.id','=','appointments.service_id')
-         ->select('providers.bussiness_name','services.name',
-         DB::raw('SUM(services.price - (services.price * services.discount / 100)) as total_amount'))
-         ->whereMonth('appointments.created_at',$month)->where('appointments.status','=','done')
-         ->groupBy('providers.bussiness_name','services.name')
-         ->get();
-     }
-      return response()->json([
-         'products'=>$product,
-         'services'=> $services
-      ]);
-    }catch(\Exception){
-     return response()->json([
-         'status'=>0
-      ]);
+
+     public function reportService($provider){
+
+        try
+      {
+          $this->authorize('admin',Provider::find($provider));
+
+         $services=DB::table('service_locations')->where('provider_id','=',$provider)->join(
+            'services','service_locations.id','=','services.service_location_id'
+        )->join('appointments','services.id','=','appointments.service_id')
+        ->select('services.name',
+        DB::raw('SUM(services.price - (services.price * services.discount / 100)) as total_amount'))
+        ->whereMonth('appointments.created_at',date('m'))->where('appointments.status','=','done')
+        ->groupBy('services.name')
+        ->get();
+          return response()->json([
+            'status' =>1,
+            'sales'=>$services
+          ]);
+
+        }catch(\Exception $e){
+            return response()->json([
+                'status' =>0,
+              ]);
+        }
     }
 
-      /*   $product=Provider::with(['products.orders'=>function($query) use ($month){
-         $query->where('order_product.status','accepted');
-         $query->whereMonth('orders.created_at',$month);
-     }])->get(); */
- }
+
+     public function reportProduct($provider){
+
+        try
+      {
+          $this->authorize('admin',Provider::find($provider));
+
+         $product[]=DB::table('products')->where('provider_id','=',$provider)->join('order_product','products.id','=','order_product.product_id')
+         ->join('orders','order_product.order_id','=','orders.id')->select('products.title',
+         DB::raw('SUM(order_product.quantity * (products.price - (products.price * products.discount / 100))) as total_amount'))
+         ->whereMonth('orders.created_at',10)->where('order_product.status','=','delivered')
+         ->groupBy('products.title')
+         ->get();
+          return response()->json([
+            'status' =>1,
+            'sales'=>$product
+          ]);
+
+        }catch(\Exception $e){
+            return response()->json([
+                'status' =>0,
+              ]);
+        }
+
+    }
 }
