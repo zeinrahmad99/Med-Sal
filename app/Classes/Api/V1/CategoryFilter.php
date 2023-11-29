@@ -53,35 +53,4 @@ class CategoryFilter extends QueryFilter
         return $this->buildQueryForNearestServices($latitude, $longitude, $distance, $sortByDistance);
     }
 
-    private function buildQueryForLocationSearch($latitude, $longitude, $distance)
-    {
-        $haversineFormula = $this->calculateHaversineDistance($latitude, $longitude, 'service_locations.latitude', 'service_locations.longitude');
-
-        return $this->query
-            ->with(['services', 'providers.serviceLocations'])
-            ->whereHas('providers.serviceLocations', function ($query) use ($haversineFormula, $distance) {
-                $query->selectRaw("service_locations.*, $haversineFormula AS distance")
-                    ->having('distance', '<=', $distance)
-                    ->orderBy('distance');
-            });
-    }
-
-    public function buildQueryForNearestServices($latitude, $longitude, $distance, $sortByDistance)
-    {
-        $query = $this->query
-            ->select('categories.*')
-            ->with(['services', 'providers.serviceLocations'])
-            ->join('providers', 'categories.id', '=', 'providers.service_type_id')
-            ->join('service_locations as sl', 'providers.id', '=', 'sl.provider_id')
-            ->selectRaw($this->calculateHaversineDistance($latitude, $longitude, 'sl.latitude', 'sl.longitude') . ' AS distance')
-            ->where('providers.deleted_at', null)
-            ->having('distance', '<=', $distance);
-
-        if ($sortByDistance) {
-            $query->orderByRaw('distance');
-        }
-
-        return $query;
-    }
-
 }
