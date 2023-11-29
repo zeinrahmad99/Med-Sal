@@ -19,7 +19,7 @@ class Service extends Model
         'description_ar',
         'price',
         'status',
-        // 'discount',
+        'discount',
     ];
 
     public function appointments()

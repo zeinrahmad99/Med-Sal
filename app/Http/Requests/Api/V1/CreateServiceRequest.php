@@ -29,7 +29,7 @@ class CreateServiceRequest extends FormRequest
             'description' => 'required|string',
             'description_ar' => 'required|string',
             'price' => 'required|numeric|min:0',
-            // 'discount' => 'nullable|numeric|min:0',
+            'discount' => 'required|sometimes|numeric|min:0',
         ];
     }
 }

@@ -10,9 +10,9 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 Route::middleware('language')->group(function () {
-    Route::get('/categories',[CategoryController::class,'index']);
-
-    Route::get('/category/{id}',[CategoryController::class,'show']);
+    Route::get('/categories', [CategoryController::class, 'index']);
+    Route::get('/category/{id}', [CategoryController::class, 'show']);
 });
 
 
+Route::get('/categories-search', [CategoryController::class, 'search']);

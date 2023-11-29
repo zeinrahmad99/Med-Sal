@@ -10,7 +10,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/providers/{id}', [ProviderController::class, 'delete']);
     Route::get('/report/product/{provider}', [ProviderController::class, 'reportProduct']);
     Route::get('/report/service/{provider}', [ProviderController::class, 'reportService']);
-
     Route::get('/provider/{id}', [ProviderController::class, 'show']);
 });
 

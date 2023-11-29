@@ -30,7 +30,7 @@ class UpdateServiceRequest extends FormRequest
             'description_ar' => 'string',
             'price' => 'numeric|min:0',
             'status' => 'in:active,inactive,pending,unaccept',
-            // 'discount' => 'nullable|numeric|min:0',
+            'discount' => 'numeric|min:0',
 
         ];
     }

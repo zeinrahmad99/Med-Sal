@@ -93,7 +93,7 @@ class AdminController extends Controller
        {
         Gate::authorize('isSuperAdmin');
 
-        return DB::transaction(function () use ($order)
+        return DB::transaction(function () use ($id)
         {
             $admin=Admin::where('admin_id',$id)->first();
             $user=User::find($id);

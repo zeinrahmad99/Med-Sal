@@ -21,6 +21,8 @@ class Product extends Model
         'price',
         'discount',
         'status',
+        'quantity',
+        'images'
     ];
 
     public function provider()

@@ -10,7 +10,8 @@ class Order extends Model
     use HasFactory;
     protected $fillable=[
         'patient_id',
-        'location',
+        'latitude',
+        'longitude',
         'cost'
     ];
 
