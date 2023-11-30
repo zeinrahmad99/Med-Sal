@@ -22,7 +22,7 @@ class CreateAdminRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'admin_id'=>'required|exists:admins,id',
+            'admin_id'=>'required|exists:users,id',
             'role_id'=>'required|exists:roles,id',
         ];
     }

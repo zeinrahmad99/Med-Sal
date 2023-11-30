@@ -9,15 +9,16 @@ use App\Http\Requests\Api\V1\StoreCartRequest;
 
 class CartController extends Controller
 {
-    public function index()
+   /*  public function index()
     {
+
         $carts = Cart::all();
 
         return response()->json([
             'status' => $carts ? 1 : 0,
             'carts' => $carts,
         ]);
-    }
+    }  */
 
     public function store(StoreCartRequest $request)
     {
@@ -33,20 +34,19 @@ class CartController extends Controller
 
     public function delete(int $id)
     {
-        $cart = Cart::firstwhere('id', $id);
+        try{
+            $cart = Cart::firstwhere('id', $id);
+            $this->authorize('view',$cart);
+           $cart->delete();
 
-        if (!$cart) {
+            return response()->json([
+                'status' => 1,
+            ]);
+        }catch(\Exception $e){
             return response()->json([
                 'status' => 0,
-                'message' => 'عذراً يوجد خطأ ما'
             ]);
         }
-
-        $deleted = $cart->delete();
-
-        return response()->json([
-            'status' => $deleted ? 1 : 0,
-        ]);
     }
 
 }

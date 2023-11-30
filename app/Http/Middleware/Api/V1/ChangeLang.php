@@ -23,8 +23,8 @@ class ChangeLang
         }
         if(auth('sanctum')->check()){
           $lang=DB::table('languages')->where('user_id','=',auth('sanctum')->id())->first();
-
-          app()->setLocale($lang->lang);
+          if($lang)
+         { app()->setLocale($lang->lang);}
         }
         return $next($request);
     }

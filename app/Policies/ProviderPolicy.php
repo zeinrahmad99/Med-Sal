@@ -22,7 +22,7 @@ class ProviderPolicy
     {
         $role= Role::where('name',$user->role)->first();
         $permission=Permission::where('role_id',$role->id)->where('ability','view products and services')->first();
-        return  $user->id === $provider->user_id && $permission->status==='allow' || $provider->category->admin->user->id === $user->id && $permission->status==='allow';
+        return  $user->id === $provider->user->id && $permission->status==='allow' || $provider->category->admin_id === $user->id && $permission->status==='allow';
     }
     /** request an update of personal data */
 

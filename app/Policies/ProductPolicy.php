@@ -53,7 +53,7 @@ class ProductPolicy
      public function accepted(User $user, Product $product): bool
     {
         $role= Role::where('name',$user->role)->first();
-        $permission=Permission::where('role_id',$role->id)->where('ability','accepted product')->first();
+        $permission=Permission::where('role_id',$role->id)->where('ability','accept product')->first();
         return  $product->category->admin_id === $user->id && $permission->status === 'allow';
 
     }

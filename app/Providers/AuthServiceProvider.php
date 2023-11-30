@@ -15,6 +15,10 @@ use App\Policies\ProductPolicy;
 use App\Models\Api\V1\User;
 use App\Policies\ProviderPolicy;
 use App\Models\Api\V1\Provider;
+use App\Policies\CartPolicy;
+use App\Models\Api\V1\Cart;
+use App\Policies\CategoryPolicy;
+use App\Models\Api\V1\Category;
 use Illuminate\Support\Facades\Gate;
 class AuthServiceProvider extends ServiceProvider
 {
@@ -30,6 +34,8 @@ class AuthServiceProvider extends ServiceProvider
         Order::class => OrderPolicy::class,
         Appointment::class => AppointmentPolicy::class,
         Provider::class => ProviderPolicy::class,
+        Cart::class => CartPolicy::class,
+        Category::class => CategoryPolicy::class,
 
     ];
 

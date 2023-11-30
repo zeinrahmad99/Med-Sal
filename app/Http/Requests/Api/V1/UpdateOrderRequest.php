@@ -22,8 +22,8 @@ class UpdateOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'latitude' => 'float',
-            'longitude' => 'float'
+            'latitude' => 'numeric',
+            'longitude' => 'numeric'
         ];
     }
 }

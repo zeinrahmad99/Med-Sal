@@ -11,6 +11,9 @@ use Illuminate\Auth\Access\Response;
 
 class UserPolicy
 {
+    public function show(User $user,User $userLog){
+        return $user->id === $userLog->id || $user->role === 'super_admin';
+    }
     public function editPersonalData(User $user, Provider $provider): bool
     {
         return $user->role === 'provider' && $user->id === $provider->user->id;

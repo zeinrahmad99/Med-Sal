@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Traits\Api\V1\UserAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\UserUpdateRequest;
+use Illuminate\Support\Facades\Gate;
 
 class UserController extends Controller
 {
@@ -14,56 +15,58 @@ class UserController extends Controller
 
     public function index()
     {
-        $users = User::all();
+        try{
+            Gate::authorize('isSuperAdmin');
+            $users = User::all();
 
+            return response()->json([
+                'status' => 1,
+                'data' => $users,
+            ]);
+    }catch(\Exception $e){
         return response()->json([
-            'status' => $users ? 1 : 0,
-            'data' => $users,
+            'status' =>10,
         ]);
     }
-
+    }
 
     public function show($id)
     {
-        $user = User::firstwhere('id', $id);
-
-        return response()->json([
-            'status' => $user ? 1 : 0,
+        try{
+         $user = User::firstwhere('id', $id);
+         $this->authorize('show',$user);
+         return response()->json([
+            'status' =>1,
             'data' => $user,
         ]);
+
+        }catch(\Exception $e){
+            return response()->json([
+                'status' => 0,
+            ]);
+        }
     }
 
     public function update(UserUpdateRequest $request, $id)
     {
-        $user = User::firstWhere('id', $id);
+        try{
+            $user = User::firstWhere('id', $id);
+            $this->authorize('show',$user);
+            $data = $request->all();
+            if ($request->has('email') && $user->email !== $request->input('email')) {
+                $this->resetEmailVerification($user);
+            }
 
-        if (!$user) {
+            $user->update($data);
+
+        }catch(\Exception $e){
             return response()->json([
                 'status' => 0,
-                'message' => 'المستخدم غير موجود'
             ]);
         }
-
-        $data = $request->all();
-
-        if (!$data) {
-            return response()->json([
-                'status' => 0,
-                'message' => 'عذراً يوجد خطأ ما'
-            ]);
-        }
-
-        if ($request->has('email') && $user->email !== $request->input('email')) {
-            $this->resetEmailVerification($user);
-        }
-
-        $user->update($data);
-
-        return response()->json([
-            'status' => $user ? 1 : 0,
-            'data' => $user,
-        ]);
     }
+
+
 
     public function delete(int $id)
     {
