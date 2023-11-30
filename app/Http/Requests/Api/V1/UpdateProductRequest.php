@@ -30,8 +30,11 @@ class UpdateProductRequest extends FormRequest
             'description_ar' => 'string',
             'price' => 'numeric',
             'status' => 'in:active,inactive,pending,unaccept',
-            // 'discount' => 'nullable|numeric',
-            'quantity' => 'integer'
+            'discount' => 'numeric|min:0',
+            'quantity' => 'integer',
+            'images' => ['array', 'min:1', 'max:2'],
+            'images.*' => ['mimes:jpeg,jpg,png', 'max:2048'],
+
         ];
     }
 }

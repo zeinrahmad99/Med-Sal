@@ -2,28 +2,13 @@
 
 use Illuminate\Support\Facades\Route;
 
-
 Route::middleware('auth:sanctum')->group(function () {
-
-    // TokenAuth
-    include __DIR__ . '/developers/Api/V1/TokenAuth.php';
-
-    // Appointment
-    include __DIR__ . '/developers/Api/V1/Appointment.php';
-
-    // Order
-    include __DIR__ . '/developers/Api/V1/Order.php';
-
-    // Admin
-    include __DIR__ . '/developers/Api/V1/Admin.php';
 
     // Permission
     include __DIR__ . '/developers/Api/V1/Permission.php';
 
     // Role
     include __DIR__ . '/developers/Api/V1/Role.php';
-
-
 
 });
 
@@ -42,10 +27,20 @@ include __DIR__ . '/developers/Api/V1/Cart.php';
 // User
 include __DIR__ . '/developers/Api/V1/User.php';
 
-
 // Category
 include __DIR__ . '/developers/Api/V1/Category.php';
 
+// Provider
+include __DIR__ . '/developers/Api/V1/Provider.php';
 
- // Provider
- include __DIR__ . '/developers/Api/V1/Provider.php';
+// Appointment
+include __DIR__ . '/developers/Api/V1/Appointment.php';
+
+// Order
+include __DIR__ . '/developers/Api/V1/Order.php';
+
+// Admin
+include __DIR__ . '/developers/Api/V1/Admin.php';
+
+// App Key
+include __DIR__ . '/developers/Api/V1/App-key.php';

@@ -26,7 +26,7 @@ class AuthController extends Controller
 
         $user = User::create([
             'email' => $request['email'],
-            'password' => bcrypt($request['password']),
+            'password' => $request['password'],
             'role' => 'patient',
         ]);
 
@@ -176,16 +176,21 @@ class AuthController extends Controller
             ]);
         });
     }
-    function changeLang(ChangeLanguage $req){
-       $user=DB::table('languages')->where('user_id',Auth::id())->first();
-       if($req->lang == 'ar' && !$user){
-        DB::table('languages')->insert([
-            'user_id'=>Auth::id(),
-            'lang'=>$req->lang,
+    function changeLang(ChangeLanguage $req)
+    {
+        $user = DB::table('languages')->where('user_id', Auth::id())->first();
+        if ($req->lang == 'ar' && !$user) {
+            DB::table('languages')->insert([
+                'user_id' => Auth::id(),
+                'lang' => $req->lang,
+            ]);
+        } else if ($req->lang == 'en' && $user) {
+            DB::table('languages')->where('user_id', Auth::id())->delete();
+        }
+
+        return response()->json([
+            'status' => 1,
+            'message' => 'Language changed successfully.',
         ]);
-       }
-       else if($req->lang=='en' && $user){
-        DB::table('languages')->where('user_id',Auth::id())->delete();
-       }
     }
 }

@@ -11,8 +11,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/services/{id}', [ServiceController::class, 'delete']);
 });
 Route::middleware('language')->group(function () {
-Route::get('/services', [ServiceController::class, 'index']);
-Route::get('/services/{id}', [ServiceController::class, 'show']);
+    Route::get('/services', [ServiceController::class, 'index']);
+    Route::get('/services/{id}', [ServiceController::class, 'show']);
 });
 
 

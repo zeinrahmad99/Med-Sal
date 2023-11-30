@@ -22,8 +22,8 @@ class CreateOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'latitude' => 'required|float',
-            'longitude' => 'required|float'
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric'
         ];
     }
 }

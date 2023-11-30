@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Api\V1;
+
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Api\V1\Category;
@@ -17,26 +18,27 @@ class CategoryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(CategoryFilter $filters)
+    public function index()
     {
-         $categories = Category::filter($filters)->get();
+        if (app()->getLocale() == 'ar') {
+            $category = Category::select('name_' . app()->getLocale(), 'description_' . app()->getLocale())->get();
+        } else {
+            $category = Category::select('name', 'description')->get();
+        }
+        return response()->json([
+            'status' => 1,
+            'categories' => $category,
+        ]);
+    }
+
+    public function search(CategoryFilter $filters)
+    {
+        $categories = Category::filter($filters)->get();
 
         return response()->json([
             'status' => 1,
             'categories' => $categories,
         ]);
-
-      /*   if(app()->getLocale() == 'ar')
-        {
-            $category=Category::select('name_'.app()->getLocale(),'description_'.app()->getLocale())->get();
-        }
-        else
-        {
-            $category=Category::select('name','description')->get();
-
-        }
-        return $category;*/
-
     }
 
     /**
@@ -44,19 +46,17 @@ class CategoryController extends Controller
      */
     public function store(CreateCategoryRequest $request)
     {
-        try{
+        try {
             Gate::authorize('isSuperAdmin');
-            $data= array_merge($request->all(),['status' => 'active']);
-            $category=Category::create($data);
+            $data = array_merge($request->all(), ['status' => 'active']);
+            $category = Category::create($data);
 
             return response()->json([
                 'status' => 1,
-                'message' =>'Create Category Successfully',
+                'message' => 'Create Category Successfully',
 
             ]);
-        }
-        catch(\Exception $e)
-        {
+        } catch (\Exception $e) {
             return response()->json([
                 'status' => 0,
             ]);
@@ -68,40 +68,37 @@ class CategoryController extends Controller
      */
     public function show($id)
     {
-        if(app()->getLocale() == 'ar')
-        {
-            $category=Category::where('id',$id)->select('name_'.app()->getLocale(),'description_'.app()->getLocale())->get();
-        }
-        else
-        {
-            $category=Category::where('id',$id)->select('name','description')->get();
+        if (app()->getLocale() == 'ar') {
+            $category = Category::where('id', $id)->select('name_' . app()->getLocale(), 'description_' . app()->getLocale())->get();
+        } else {
+            $category = Category::where('id', $id)->select('name', 'description')->get();
         }
 
         return response()->json([
-            'status' =>1,
-            'category'=>$category,
+            'status' => 1,
+            'category' => $category,
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateCategoryRequest $request,$id)
+    public function update(UpdateCategoryRequest $request, $id)
     {
-      try{
-        Gate::authorize('isSuperAdmin');
-        $category=Category::findOrfail($id);
-        $data=$request->all();
-        $category->update($data);
-        return response()->json([
-            'status'=>1,
-            'message'=>'Update Category Successfully'
-        ]);
-      }catch(\Exception $e){
-        return response()->json([
-            'status'=>0,
-        ]);
-      }
+        try {
+            Gate::authorize('isSuperAdmin');
+            $category = Category::findOrfail($id);
+            $data = $request->all();
+            $category->update($data);
+            return response()->json([
+                'status' => 1,
+                'message' => 'Update Category Successfully'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 0,
+            ]);
+        }
     }
 
     /**
@@ -109,18 +106,18 @@ class CategoryController extends Controller
      */
     public function delete($id)
     {
-      try{
-        Gate::authorize('isSuperAdmin');
-        $category=Category::findOrfail($id);
-        $category->delete();
-        return response()->json([
-            'status' =>1,
-            'message' =>'delete Category Successfully',
-        ]);
-      }catch(\Exception $e){
-        return response()->json([
-            'status'=>0,
-        ]);
-      }
+        try {
+            Gate::authorize('isSuperAdmin');
+            $category = Category::findOrfail($id);
+            $category->delete();
+            return response()->json([
+                'status' => 1,
+                'message' => 'delete Category Successfully',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 0,
+            ]);
+        }
     }
 }

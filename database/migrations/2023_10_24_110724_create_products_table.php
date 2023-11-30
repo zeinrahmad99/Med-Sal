@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('name_ar');
             $table->string('description');
             $table->string('description_ar');
+            $table->text('images')->nullable();
             $table->string('price');
             $table->string('discount')->nullable();
             $table->integer('quantity');
