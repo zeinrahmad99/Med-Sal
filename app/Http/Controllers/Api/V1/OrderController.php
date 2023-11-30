@@ -87,8 +87,6 @@ class OrderController extends Controller
             return response()->json([
                 'status' =>1,
                 'message' => 'Add Order Successfully',
-                // 'p'=>$price,
-                // 'cost'=>$cost,
             ]);
     });
 }

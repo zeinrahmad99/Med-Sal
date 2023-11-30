@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('description_ar');
             $table->text('images')->nullable();
             $table->string('price');
-            $table->string('discount')->nullable();
+            $table->string('discount')->default('0');
             $table->integer('quantity');
             $table->enum('status', ['active', 'inactive', 'pending', 'unaccept'])->default('pending');
             $table->timestamps();

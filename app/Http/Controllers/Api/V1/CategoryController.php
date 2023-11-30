@@ -20,16 +20,28 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        if (app()->getLocale() == 'ar') {
-            $category = Category::select('name_' . app()->getLocale(), 'description_' . app()->getLocale())->get();
-        } else {
-            $category = Category::select('name', 'description')->get();
+
+        if(auth('sanctum')->check() && auth('sanctum')->user()->role == 'super_admin')
+               {
+                $category=Category::all();
+               }
+        else{
+            if(app()->getLocale() == 'ar')
+            {
+                $category=Category::where('status','active')->select('name_'.app()->getLocale(),'description_'.app()->getLocale())->get();
+            }
+            else
+            {
+                $category=Category::where('status','active')->select('name','description')->get();
+            }
         }
+
         return response()->json([
             'status' => 1,
             'categories' => $category,
         ]);
-    }
+}
+
 
     public function search(CategoryFilter $filters)
     {

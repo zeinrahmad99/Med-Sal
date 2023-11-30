@@ -70,9 +70,7 @@ class AdminController extends Controller
      */
     public function show($id)
     {
-
-            $admin =Category::where('admin_id',Auth::id())->get();
-
+             $admin=Admin::where('admin_id',$id)->with('user')->get();
             return response()->json([
                 'status' => 1,
                 'admin' => $admin,
