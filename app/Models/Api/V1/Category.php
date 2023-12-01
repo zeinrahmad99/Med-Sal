@@ -27,7 +27,7 @@ class Category extends Model
 
     public function admin()
     {
-        return $this->belongsTo(Admin::class,'admin_id');
+        return $this->belongsTo(Admin::class, 'admin_id');
     }
 
     public function providers()
@@ -43,10 +43,14 @@ class Category extends Model
         return $this->hasMany(Service::class, 'category_id');
     }
 
-        //applying filters
+    public function ScopeFilter($query, QueryFilter $filters)
+    {
+        return $filters->apply($query);
+    }
 
-        public function ScopeFilter( $query, QueryFilter $filters ) {
-            return $filters->apply( $query );
-        }
+    public function scopeActive($query)
+    {
+        return $query->where('status', 'active');
+    }
 }
 

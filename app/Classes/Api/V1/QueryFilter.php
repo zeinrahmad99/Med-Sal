@@ -18,7 +18,7 @@ abstract class QueryFilter
     {
         $this->request = $request;
     }
-    
+
     public function apply(Builder $query)
     {
         $this->query = $query;
@@ -35,12 +35,22 @@ abstract class QueryFilter
         return $this->request->all();
     }
 
+
+
     public function buildQueryForLocationSearch($latitude, $longitude, $distance)
     {
         $haversineFormula = $this->calculateHaversineDistance($latitude, $longitude, 'service_locations.latitude', 'service_locations.longitude');
 
         return $this->query
-            ->with(['services', 'providers.serviceLocations'])
+            ->with([
+                'services' => function ($query) {
+                    $query->active();
+                },
+                'providers' => function ($query) {
+                    $query->active();
+                },
+                'providers.serviceLocations'
+            ])
             ->whereHas('providers.serviceLocations', function ($query) use ($haversineFormula, $distance) {
                 $query->selectRaw("service_locations.*, $haversineFormula AS distance")
                     ->having('distance', '<=', $distance)
@@ -52,7 +62,14 @@ abstract class QueryFilter
     {
         $query = $this->query
             ->select('categories.*')
-            ->with(['services', 'providers.serviceLocations'])
+            ->with([
+                'services' => function ($query) {
+                    $query->active(); // Apply the active() filter to services
+                },
+                'providers' => function ($query) {
+                    $query->active(); // Apply the active() filter to providers
+                }
+            ])
             ->join('providers', 'categories.id', '=', 'providers.service_type_id')
             ->join('service_locations as sl', 'providers.id', '=', 'sl.provider_id')
             ->selectRaw($this->calculateHaversineDistance($latitude, $longitude, 'sl.latitude', 'sl.longitude') . ' AS distance')

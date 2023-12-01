@@ -43,4 +43,9 @@ class Product extends Model
     {
         return $this->belongsToMany(Order::class, 'order_product')->withPivot('status');
     }
+
+    public function scopeActive($query)
+    {
+        return $query->where('status', 'active');
+    }
 }
