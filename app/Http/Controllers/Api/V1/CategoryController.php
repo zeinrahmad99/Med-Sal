@@ -20,13 +20,13 @@ class CategoryController extends Controller
      */
     public function index()
     {
+      if(auth('sanctum')->check() && auth('sanctum')->user()->can('viewAny',Category::class)){
 
-        if(auth('sanctum')->check() && auth('sanctum')->user()->role == 'super_admin')
-               {
-                $category=Category::all();
-               }
-        else{
-            if(app()->getLocale() == 'ar')
+        $category=Category::all();
+
+      }
+      else{
+        if(app()->getLocale() == 'ar')
             {
                 $category=Category::where('status','active')->select('name_'.app()->getLocale(),'description_'.app()->getLocale())->get();
             }
@@ -34,7 +34,8 @@ class CategoryController extends Controller
             {
                 $category=Category::where('status','active')->select('name','description')->get();
             }
-        }
+      }
+
 
         return response()->json([
             'status' => 1,
@@ -80,11 +81,16 @@ class CategoryController extends Controller
      */
     public function show($id)
     {
-        if (app()->getLocale() == 'ar') {
-            $category = Category::where('id', $id)->select('name_' . app()->getLocale(), 'description_' . app()->getLocale())->get();
-        } else {
-            $category = Category::where('id', $id)->select('name', 'description')->get();
+        if(auth('sanctum')->check() && auth('sanctum')->user()->can('viewAny',Category::class)){
+           $category=Category::find($id);
+        }else{
+            if (app()->getLocale() == 'ar') {
+                $category = Category::where('status','active')->where('id', $id)->select('name_' . app()->getLocale(), 'description_' . app()->getLocale())->get();
+            } else {
+                $category = Category::where('status','active')->where('id', $id)->select('name', 'description')->get();
+            }
         }
+
 
         return response()->json([
             'status' => 1,
