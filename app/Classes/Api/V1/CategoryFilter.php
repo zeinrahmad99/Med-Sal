@@ -11,13 +11,15 @@ class CategoryFilter extends QueryFilter
     use Filters;
     public function searchByCategoryName($name)
     {
-        return $this->query->where('name', 'like', '%' . $name . '%')
+        return $this->query
+            ->where('name', 'like', '%' . $name . '%')
             ->active();
     }
 
     public function searchProductsByCategoryName($name)
     {
-        return $this->query->where('name', $name)
+        return $this->query
+            ->where('name', $name)
             ->with([
                 'products' => function ($query) {
                     $query->active();
@@ -28,7 +30,8 @@ class CategoryFilter extends QueryFilter
 
     public function searchServicesByCategoryName($name)
     {
-        return $this->query->where('name', $name)
+        return $this->query
+            ->where('name', $name)
             ->with([
                 'services' => function ($query) {
                     $query->active();
@@ -39,7 +42,8 @@ class CategoryFilter extends QueryFilter
 
     public function searchServicesProductsByCategoryName($name)
     {
-        return $this->query->where('name', $name)
+        return $this->query
+            ->where('name', $name)
             ->with([
                 'services' => function ($query) {
                     $query->active();
@@ -54,8 +58,7 @@ class CategoryFilter extends QueryFilter
     {
         return $this->query
             ->whereHas('services', function ($query) use ($serviceName) {
-                $query->where('name', $serviceName)
-                    ->active();
+                $query->where('name', $serviceName)->active();
             })
             ->with([
                 'providers' => function ($query) {

@@ -64,10 +64,10 @@ abstract class QueryFilter
             ->select('categories.*')
             ->with([
                 'services' => function ($query) {
-                    $query->active(); // Apply the active() filter to services
+                    $query->active();
                 },
                 'providers' => function ($query) {
-                    $query->active(); // Apply the active() filter to providers
+                    $query->active();
                 }
             ])
             ->join('providers', 'categories.id', '=', 'providers.service_type_id')
