@@ -26,7 +26,7 @@ class Provider extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class,'user_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function serviceLocations()
@@ -36,7 +36,7 @@ class Provider extends Model
 
     public function category()
     {
-        return $this->belongsTo(Category::class,'service_type_id');
+        return $this->belongsTo(Category::class, 'service_type_id');
     }
 
     public function products()
@@ -47,5 +47,10 @@ class Provider extends Model
     public function updateRequests()
     {
         return $this->hasMany(ProviderProfileUpdateRequest::class);
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('status', 'active');
     }
 }

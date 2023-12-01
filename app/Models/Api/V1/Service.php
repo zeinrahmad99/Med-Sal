@@ -28,12 +28,15 @@ class Service extends Model
     }
     public function serviceLocation()
     {
-        return $this->belongsTo(ServiceLocation::class,'service_location_id');
+        return $this->belongsTo(ServiceLocation::class, 'service_location_id');
     }
-     public function category()
+    public function category()
     {
-        return $this->belongsTo(Category::class,'category_id');
+        return $this->belongsTo(Category::class, 'category_id');
     }
 
-
+    public function scopeActive($query)
+    {
+        return $query->where('status', 'active');
+    }
 }
