@@ -24,7 +24,7 @@ class AdminController extends Controller
     {
         try{
             Gate::authorize('isSuperAdmin');
-            $admins = Admin::all();
+            $admins = Admin::with('categories')->get();
 
                 return response()->json([
                     'status' => 1,
@@ -46,7 +46,7 @@ class AdminController extends Controller
         Gate::authorize('isSuperAdmin');
         return DB::transaction(function () use ($id)
         {
-            $admin=User::find($id);
+            $admin=User::findorfail($id);
             $role=Role::where('name','admin')->first();
             $admin->update(['role'=>'admin']);
             Admin::create([
@@ -70,7 +70,7 @@ class AdminController extends Controller
      */
     public function show($id)
     {
-             $admin=Admin::where('admin_id',$id)->with('user')->get();
+            $admin=Admin::where('admin_id',$id)->with('user')->with('categories')->get();
             return response()->json([
                 'status' => 1,
                 'admin' => $admin,

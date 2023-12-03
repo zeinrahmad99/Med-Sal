@@ -4,6 +4,7 @@ namespace App\Http\Requests\Api\V1;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+
 class UpdateAppointmentRequest extends FormRequest
 {
     /**
@@ -22,7 +23,7 @@ class UpdateAppointmentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'date'=>'date_format:Y-m-d',
+            'date'=>'date_format:Y-m-d|after:today',
         ];
     }
 }

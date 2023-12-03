@@ -23,6 +23,6 @@ class Admin extends Model
     }
      public function categories()
     {
-        return $this->hasMany(Category::class, 'admin_id');
+        return $this->hasMany(Category::class, 'admin_id','admin_id');
     }
 }

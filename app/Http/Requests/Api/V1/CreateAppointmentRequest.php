@@ -22,7 +22,7 @@ class CreateAppointmentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'date'=>'required|date_format:Y-m-d',
+            'date'=>'required|date_format:Y-m-d|after:today',
             'service_id'=>'required|exists:services,id',
         ];
     }

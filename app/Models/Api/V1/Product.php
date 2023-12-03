@@ -41,7 +41,7 @@ class Product extends Model
 
     public function orders()
     {
-        return $this->belongsToMany(Order::class, 'order_product')->withPivot('status');
+        return $this->belongsToMany(Order::class, 'order_product');
     }
 
     public function scopeActive($query)

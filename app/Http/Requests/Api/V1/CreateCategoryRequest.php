@@ -22,7 +22,7 @@ class CreateCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'admin_id'=>'required|exists:admins,id',
+            'admin_id'=>'required|exists:admins,admin_id',
             'name' => 'required|string',
             'name_ar' =>'required|string',
             'description'=>'required|string',

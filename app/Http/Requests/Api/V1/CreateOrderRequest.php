@@ -23,7 +23,8 @@ class CreateOrderRequest extends FormRequest
     {
         return [
             'latitude' => 'required|numeric',
-            'longitude' => 'required|numeric'
+            'longitude' => 'required|numeric',
+            'cost'=>'numeric',
         ];
     }
 }

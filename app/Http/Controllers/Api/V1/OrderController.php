@@ -22,28 +22,32 @@ class OrderController extends Controller
 
     /**show provider order with products which related to provider hisself */
     public function show($id){
-    try
-       {
-         Gate::authorize('isProvider');
-            {
-                 $order=Order::findOrfail($id);
-                $products=$order->products;
-                foreach($products as $product){
-                    $provider=Provider::find($product->provider_id);
-                if($provider->user_id == Auth::id())
-                    $res[]=$product;
-                }
-
+        $order=Order::find($id); 
+         if(auth('sanctum')->user()->can('isProvider'))
+             {    $order=Order::where('id',$id)->select('id','patient_id','latitude','longitude')->with('products'
+                 ,function($query) use ($id){
+                    $query->where('order_product.order_id',$id);
+                    $query->select('order_product.product_id','order_product.status','order_product.price','order_product.quantity');
+                 })->get();
                 return response()->json([
                     'status' => 1,
                     'order' => $order,
-                 ]);
-            }
-        }catch(\Exception $e){
+                 ]);}     
+          else if (auth('sanctum')->user()->can('view',$order)){
+            $order=Order::where('id',$id)->select('id','patient_id','latitude','longitude')->with('products'
+            ,function($query) use ($id){
+               $query->select('order_product.product_id','order_product.status','order_product.price','order_product.quantity');
+            })->get();
             return response()->json([
-                'status' => 0,
-             ]);
-        }
+                'status' => 1,
+                'order' => $order,
+             ]);}
+             else{
+                return response()->json([
+                    'status' =>0
+                 ]);
+             }
+               
     }
     /**
      * Store a newly created resource in storage.
@@ -51,21 +55,23 @@ class OrderController extends Controller
     public function store(CreateOrderRequest $request)
     {
         return DB::transaction(function () use ($request){
-            $data = array_merge($request->all() , ['patient_id' => Auth::id()]);
+            $data = array_merge($request->all() , ['patient_id' => Auth::id(),'cost'=>0]);
             $order_products=$request->input('products');
             $cost=0;
             $order=Order::create($data);
            foreach($order_products as $order_product)
                 {
                    $product=Product::find($order_product['product_id']);
+                   $price=$product->price * $order_product['quantity'];
                     if($product->quantity >= $order_product['quantity']){
                           $order->products()->attach($order->id,
                         ['product_id'=>$order_product['product_id'],
                         'quantity'=>$order_product['quantity'],
-                        'price'=>($product->price * $order_product['quantity']),
+                        'price'=>$price,
                          ]);
 
-                        $cost+=$order_product['price'];
+                        $cost+=$price;
+                        $order->update(['cost'=>$cost]);
                         $product->quantity =$product->quantity - $order_product['quantity'];
                         $product->save();
                         $provider=$product->provider->user;

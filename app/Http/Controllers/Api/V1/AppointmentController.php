@@ -21,7 +21,7 @@ class AppointmentController extends Controller
     public function index()
     {
         try{
-        Gate::allows('isProvider');
+        Gate::authorize('isProvider');
             $app=Appointment::whereHas('service.serviceLocation.provider.user',function($query){
                 $query->where('id',Auth::id());
             })->get();

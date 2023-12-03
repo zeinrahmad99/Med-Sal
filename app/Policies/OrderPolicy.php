@@ -10,6 +10,9 @@ use Illuminate\Auth\Access\Response;
 
 class OrderPolicy
 {
+    public function view(User $user , Order $order){
+        return $user->id === $order->patient_id;
+    }
     /**
      * Determine whether the user can update any models.
      */
