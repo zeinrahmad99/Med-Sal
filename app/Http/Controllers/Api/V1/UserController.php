@@ -15,7 +15,7 @@ class UserController extends Controller
 
     public function index()
     {
-        try{
+        try {
             Gate::authorize('isSuperAdmin');
             $users = User::all();
 
@@ -23,24 +23,24 @@ class UserController extends Controller
                 'status' => 1,
                 'data' => $users,
             ]);
-    }catch(\Exception $e){
-        return response()->json([
-            'status' =>10,
-        ]);
-    }
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 10,
+            ]);
+        }
     }
 
     public function show($id)
     {
-        try{
-         $user = User::firstwhere('id', $id);
-         $this->authorize('show',$user);
-         return response()->json([
-            'status' =>1,
-            'data' => $user,
-        ]);
+        try {
+            $user = User::firstwhere('id', $id);
+            $this->authorize('show', $user);
+            return response()->json([
+                'status' => 1,
+                'data' => $user,
+            ]);
 
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             return response()->json([
                 'status' => 0,
             ]);
@@ -49,9 +49,9 @@ class UserController extends Controller
 
     public function update(UserUpdateRequest $request, $id)
     {
-        try{
+        try {
             $user = User::firstWhere('id', $id);
-            $this->authorize('show',$user);
+            $this->authorize('show', $user);
             $data = $request->all();
             if ($request->has('email') && $user->email !== $request->input('email')) {
                 $this->resetEmailVerification($user);
@@ -59,7 +59,12 @@ class UserController extends Controller
 
             $user->update($data);
 
-        }catch(\Exception $e){
+            return response()->json([
+                'status' => 1,
+                'user' => $user,
+            ]);
+
+        } catch (\Exception $e) {
             return response()->json([
                 'status' => 0,
             ]);
