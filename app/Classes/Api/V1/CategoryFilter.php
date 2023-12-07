@@ -37,7 +37,7 @@ class CategoryFilter extends QueryFilter
                     $query->active();
                 }
             ]);
-        ;
+        // ;
     }
 
     public function searchServicesProductsByCategoryName($name)
