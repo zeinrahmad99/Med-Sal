@@ -14,11 +14,13 @@ abstract class QueryFilter
 
     protected $query;
 
+    // Create a new QueryFilter instance.
     public function __construct(Request $request)
     {
         $this->request = $request;
     }
 
+    // Apply the filters to the query.
     public function apply(Builder $query)
     {
         $this->query = $query;
@@ -30,13 +32,14 @@ abstract class QueryFilter
         return $this->query;
     }
 
+    // Get the filters from the request.
     public function filters()
     {
         return $this->request->all();
     }
 
 
-
+    // Build the query for searching services by location.
     public function buildQueryForLocationSearch($latitude, $longitude, $distance)
     {
         $haversineFormula = $this->calculateHaversineDistance($latitude, $longitude, 'service_locations.latitude', 'service_locations.longitude');
@@ -58,6 +61,7 @@ abstract class QueryFilter
             });
     }
 
+    // Build the query for searching nearest services.
     public function buildQueryForNearestServices($latitude, $longitude, $distance, $sortByDistance)
     {
         $query = $this->query

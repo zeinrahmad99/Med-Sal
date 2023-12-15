@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Auth;
 class AuthController extends Controller
 {
 
+    //  Register a patient.
     public function registerPatient(RegisterPatientRequest $request)
     {
 
@@ -43,6 +44,7 @@ class AuthController extends Controller
         ]);
     }
 
+    // Generate an email verification code and send it to the user.
     private function EmailVerification($user)
     {
         $verificationCode = mt_rand(100000, 999999);
@@ -52,6 +54,7 @@ class AuthController extends Controller
         event(new Registered($user));
     }
 
+    // Confirm the email verification code.
     public function confirmVerificationCode(VerifyRequest $request)
     {
 
@@ -78,6 +81,7 @@ class AuthController extends Controller
         ]);
     }
 
+    // Login a user.
     public function login(LoginRequest $request)
     {
         $credentials = $request->only('email', 'password');
@@ -100,6 +104,7 @@ class AuthController extends Controller
         ]);
     }
 
+    // Logout a user.
     public function logout(Request $request)
     {
 
@@ -114,6 +119,7 @@ class AuthController extends Controller
         ]);
     }
 
+    // Refresh the user's token.
     public function refresh(Request $request)
     {
         $user = $request->user();
@@ -128,6 +134,7 @@ class AuthController extends Controller
         ]);
     }
 
+    // Register a provider.
     public function registerProvider(RegisterProviderRequest $request)
     {
 
@@ -176,6 +183,8 @@ class AuthController extends Controller
             ]);
         });
     }
+
+    // Change the user's language.
     function changeLang(ChangeLanguage $req)
     {
         $user = DB::table('languages')->where('user_id', Auth::id())->first();

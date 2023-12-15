@@ -15,6 +15,7 @@ use App\Traits\Api\V1\Images;
 
 class ProductController extends Controller
 {
+    // Get all products.
     public function index()
     {
         if (app()->getLocale() == 'ar') {
@@ -29,6 +30,7 @@ class ProductController extends Controller
         ]);
     }
 
+    // Get a specific product by ID.
     public function show($id)
     {
 
@@ -44,6 +46,7 @@ class ProductController extends Controller
         ]);
     }
 
+    // Create a new product.
     public function store(CreateProductRequest $request)
     {
         return DB::transaction(function () use ($request) {
@@ -92,6 +95,7 @@ class ProductController extends Controller
 
     }
 
+    // Update a product by ID.
     public function update(UpdateProductRequest $request, $id)
     {
         return DB::transaction(function () use ($request, $id) {
@@ -101,7 +105,7 @@ class ProductController extends Controller
                 $data = $request->except('status');
 
                 if ($request->has('images')) {
-                    $decodedImages = json_decode($product->images); 
+                    $decodedImages = json_decode($product->images);
 
                     if (is_array($decodedImages)) {
                         foreach ($decodedImages as $image) {
@@ -132,6 +136,7 @@ class ProductController extends Controller
         });
     }
 
+    // Delete a product by ID.
     public function delete(int $id)
     {
 
@@ -164,7 +169,8 @@ class ProductController extends Controller
 
         }
     }
-    /**remove product -> make status pending */
+
+    // remove product -> make status pending
     public function remove($id)
     {
 
@@ -189,8 +195,7 @@ class ProductController extends Controller
         }
     }
 
-    /* restore product make status active */
-
+    // restore product make status active
     public function accepted($id)
     {
 

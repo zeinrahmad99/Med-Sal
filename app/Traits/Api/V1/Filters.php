@@ -4,6 +4,7 @@ namespace App\Traits\Api\V1;
 
 trait Filters
 {
+    // Haversine formula to calculate the distance between two points on a sphere (Earth)
     public function calculateHaversineDistance($latitude, $longitude, $targetLatitude, $targetLongitude)
     {
         $haversine = "(
@@ -20,7 +21,7 @@ trait Filters
 
 
 }
-
+// Do not remove , its for test later
 // bquery base deed
 
 // public function buildQueryForNearestServices($latitude, $longitude, $distance, $sortByDistance)

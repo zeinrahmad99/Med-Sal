@@ -9,17 +9,18 @@ use App\Http\Requests\Api\V1\StoreCartRequest;
 
 class CartController extends Controller
 {
-   /*  public function index()
-    {
+    //   public function index()
+    //  {
 
-        $carts = Cart::all();
+    //      $carts = Cart::all();
 
-        return response()->json([
-            'status' => $carts ? 1 : 0,
-            'carts' => $carts,
-        ]);
-    }  */
+    //      return response()->json([
+    //          'status' => $carts ? 1 : 0,
+    //          'carts' => $carts,
+    //      ]);
+    //  }  
 
+    // Create a new cart using the provided data
     public function store(StoreCartRequest $request)
     {
         $data = $request->all();
@@ -32,17 +33,18 @@ class CartController extends Controller
         ]);
     }
 
+    // Delete a cart by ID.
     public function delete(int $id)
     {
-        try{
+        try {
             $cart = Cart::firstwhere('id', $id);
-            $this->authorize('view',$cart);
-           $cart->delete();
+            $this->authorize('view', $cart);
+            $cart->delete();
 
             return response()->json([
                 'status' => 1,
             ]);
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             return response()->json([
                 'status' => 0,
             ]);

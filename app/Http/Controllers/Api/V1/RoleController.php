@@ -12,44 +12,39 @@ use Illuminate\Support\Facades\Gate;
 
 class RoleController extends Controller
 {
+    // Get all roles.
     public function index()
     {
-        try
-        {
+        try {
             Gate::authorize('isSuperAdmin');
-            if(app()->getLocale() == 'ar')
-            {
-                $roles=Role::select('name_'.app()->getLocale())->get();
-            }
-            else
-            {
-                $roles=Role::select('name')->get();
+            if (app()->getLocale() == 'ar') {
+                $roles = Role::select('name_' . app()->getLocale())->get();
+            } else {
+                $roles = Role::select('name')->get();
             }
 
             return response()->json([
                 'status' => 1,
                 'roles' => $roles,
             ]);
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             return response()->json([
-                'status'=>0,
+                'status' => 0,
             ]);
         }
     }
 
+    // Get a specific role by ID.
     public function show($id)
     {
 
-        try{
-           Gate::authorize('isSuperAdmin');
+        try {
+            Gate::authorize('isSuperAdmin');
 
-            if(app()->getLocale() == 'ar')
-            {
-                $role=Role::where('id', $id)->select('name_'.app()->getLocale())->first();
-            }
-            else
-            {
-                $role=Role::where('id', $id)->select('name')->first();
+            if (app()->getLocale() == 'ar') {
+                $role = Role::where('id', $id)->select('name_' . app()->getLocale())->first();
+            } else {
+                $role = Role::where('id', $id)->select('name')->first();
             }
 
 
@@ -57,9 +52,7 @@ class RoleController extends Controller
                 'status' => 1,
                 'role' => $role->load('permissions'),
             ]);
-        }
-        catch(\Exception $e)
-        {
+        } catch (\Exception $e) {
             return response()->json([
                 'status' => 0,
             ]);
@@ -67,6 +60,7 @@ class RoleController extends Controller
 
     }
 
+    // Update a role's permissions.
     public function update(Role $role, UpdateRoleRequest $request)
     {
         // $permissions = array_keys(app('permissions'));

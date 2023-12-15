@@ -13,15 +13,15 @@ use Illuminate\Support\Facades\DB;
 
 class ServiceController extends Controller
 {
+    // Get all services.
     public function index()
     {
-        if(app()->getLocale() == 'ar')
-        {
-            $services=Service::select('category_id','service_location_id','name_'.app()->getLocale(),'description_'.app()->getLocale(),'price','discount','status')->get();;
-        }
-        else
-        {
-            $services=Service::select('category_id','service_location_id','name','description','price','discount','status')->get();;
+        if (app()->getLocale() == 'ar') {
+            $services = Service::select('category_id', 'service_location_id', 'name_' . app()->getLocale(), 'description_' . app()->getLocale(), 'price', 'discount', 'status')->get();
+            ;
+        } else {
+            $services = Service::select('category_id', 'service_location_id', 'name', 'description', 'price', 'discount', 'status')->get();
+            ;
 
         }
 
@@ -30,15 +30,16 @@ class ServiceController extends Controller
             'services' => $services,
         ]);
     }
+
+    // Get all services for authenticated users.
     public function indexAuth()
     {
-        if(app()->getLocale() == 'ar')
-        {
-            $services=Service::select('category_id','service_location_id','name_'.app()->getLocale(),'description_'.app()->getLocale(),'price','discount','status')->get();;
-        }
-        else
-        {
-            $services=Service::select('category_id','service_location_id','name','description','price','discount','status')->get();;
+        if (app()->getLocale() == 'ar') {
+            $services = Service::select('category_id', 'service_location_id', 'name_' . app()->getLocale(), 'description_' . app()->getLocale(), 'price', 'discount', 'status')->get();
+            ;
+        } else {
+            $services = Service::select('category_id', 'service_location_id', 'name', 'description', 'price', 'discount', 'status')->get();
+            ;
 
         }
 
@@ -48,15 +49,13 @@ class ServiceController extends Controller
         ]);
     }
 
+    // Get a specific service by ID.
     public function show($id)
     {
-        if(app()->getLocale() == 'ar')
-        {
-            $service=Service::firstWhere('id',$id)->select('category_id','service_location_id','name_'.app()->getLocale(),'description_'.app()->getLocale(),'price','discount','status')->first();
-        }
-        else
-        {
-            $service=Service::firstWhere('id',$id)->select('category_id','service_location_id','name','description','price','discount','status')->first();
+        if (app()->getLocale() == 'ar') {
+            $service = Service::firstWhere('id', $id)->select('category_id', 'service_location_id', 'name_' . app()->getLocale(), 'description_' . app()->getLocale(), 'price', 'discount', 'status')->first();
+        } else {
+            $service = Service::firstWhere('id', $id)->select('category_id', 'service_location_id', 'name', 'description', 'price', 'discount', 'status')->first();
         }
 
         return response()->json([
@@ -65,81 +64,84 @@ class ServiceController extends Controller
         ]);
     }
 
+    // Create a new service.
     public function store(CreateServiceRequest $request)
     {
-       try{
-        $this->authorize('create',Service::class);
+        try {
+            $this->authorize('create', Service::class);
 
-        $data = array_merge($request->all(), ['status' => 'pending']);
+            $data = array_merge($request->all(), ['status' => 'pending']);
 
-        $service = Service::create($data);
+            $service = Service::create($data);
 
-        $admin=$service->category->admin->user;
+            $admin = $service->category->admin->user;
 
-        $admin->notify(new activeNotification($service,'new request for service'));
+            $admin->notify(new activeNotification($service, 'new request for service'));
 
-        return response()->json([
-            'status' => 1,
-            'service' => $service,
-        ]);} catch(\Exception $e){
             return response()->json([
-                'status'=>0,
+                'status' => 1,
+                'service' => $service,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 0,
             ]);
         }
     }
 
+    // Update a service.
     public function update(UpdateServiceRequest $request, $id)
     {
+        try {
+            $service = Service::find($id);
+            $this->authorize('update', $service);
 
+            $data = $request->except('status');
 
-        try{
-        $service = Service::find($id);
-        $this->authorize('update',$service);
+            $data = $request->all();
 
-        $data = $request->except('status');
+            $service->update($data);
 
-        $data = $request->all();
+            return response()->json([
+                'status' => 1,
+                'service' => $service,
+            ]);
+        } catch (\Exception $e) {
 
-        $service->update($data);
-
-        return response()->json([
-            'status' => 1,
-            'service' => $service,
-        ]);}catch(\Exception $e){
-
-        return response()->json([
-            'status'=>0,
-        ]);
+            return response()->json([
+                'status' => 0,
+            ]);
+        }
     }
-    }
 
-
+    // Delete a service.
     public function delete(int $id)
     {
 
-        try{
+        try {
             $service = Service::firstWhere('id', $id);
-            $this->authorize('forceDelete',$service);
+            $this->authorize('forceDelete', $service);
 
-        if (!$service) {
+            if (!$service) {
+                return response()->json([
+                    'status' => 0,
+                    'message' => 'عذراً يوجد خطأ ما'
+                ]);
+            }
+
+            $service = $service->delete();
+
+            if (!$service) {
+                return response()->json([
+                    'status' => 0,
+                    'message' => 'عذراً يوجد خطأ ما'
+                ]);
+            }
+
             return response()->json([
-                'status' => 0,
-                'message' => 'عذراً يوجد خطأ ما'
+                'status' => 1,
             ]);
-        }
-
-        $service = $service->delete();
-
-        if (!$service) {
-            return response()->json([
-                'status' => 0,
-                'message' => 'عذراً يوجد خطأ ما'
-            ]);
-        }
-
-        return response()->json([
-            'status' => 1,
-        ]);}catch(\Exception $e){
+        } catch (\Exception $e) {
             return response()->json([
                 'status' => 0,
             ]);
@@ -147,53 +149,52 @@ class ServiceController extends Controller
 
     }
 
-    /**remove service -> status will be pending*/
+    // remove service -> status will be pending
 
-    public function remove($id){
+    public function remove($id)
+    {
 
-        try{
-            $service=Service::findOrfail($id);
-            $this->authorize('remove',$service);
-            return DB::transaction(function () use ($service)
-            {
-                $service->update(['status'=>'unaccept']);
-                $user=$service->serviceLocation->provider->user;
-                $user->notify(new activeNotification($service,'The admin of category has made your service un accepted'));
+        try {
+            $service = Service::findOrfail($id);
+            $this->authorize('remove', $service);
+            return DB::transaction(function () use ($service) {
+                $service->update(['status' => 'unaccept']);
+                $user = $service->serviceLocation->provider->user;
+                $user->notify(new activeNotification($service, 'The admin of category has made your service un accepted'));
 
                 return response()->json([
-                    'status'=>1,
-                    'message'=>'remove service successfully'
+                    'status' => 1,
+                    'message' => 'remove service successfully'
                 ]);
             });
 
 
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             return response()->json([
                 'status' => 0,
             ]);
         }
     }
 
-    /** restore service -> make status active */
+    // restore service -> make status active
 
-    public function accepted($id){
+    public function accepted($id)
+    {
 
-        try
-        {
-           $service=Service::findOrfail($id);
-            $this->authorize('accepted',$service);
-            return DB::transaction(function () use ($service)
-            {
-                $service->update(['status'=>'active']);
-                $user=$service->serviceLocation->provider->user;
-                $user->notify(new activeNotification($service,'The admin of category has made your service activated'));
+        try {
+            $service = Service::findOrfail($id);
+            $this->authorize('accepted', $service);
+            return DB::transaction(function () use ($service) {
+                $service->update(['status' => 'active']);
+                $user = $service->serviceLocation->provider->user;
+                $user->notify(new activeNotification($service, 'The admin of category has made your service activated'));
 
                 return response()->json([
-                    'status'=>1,
-                    'message'=>'accepted service successfully'
+                    'status' => 1,
+                    'message' => 'accepted service successfully'
                 ]);
             });
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             return response()->json([
                 'status' => 0,
             ]);

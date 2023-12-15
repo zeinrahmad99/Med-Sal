@@ -10,35 +10,34 @@ use Illuminate\Support\Facades\Gate;
 
 class PermissionController extends Controller
 {
+    // Get all permissions.
     public function index()
     {
-        try{
+        try {
             Gate::allows('isSuperAdmin');
-            if(app()->getLocale() == 'ar')
-            {
-                $permissions=Permission::select('role_id','ability_'.app()->getLocale())->get();
-            }
-            else
-            {
-                $permissions=Permission::select('role_id','ability')->get();
+            if (app()->getLocale() == 'ar') {
+                $permissions = Permission::select('role_id', 'ability_' . app()->getLocale())->get();
+            } else {
+                $permissions = Permission::select('role_id', 'ability')->get();
             }
             return response()->json([
                 'status' => 1,
                 'permissions' => $permissions,
             ]);
 
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             return response()->json([
-                'status'=>0,
+                'status' => 0,
             ]);
         }
 
     }
 
+    // Update a permission by ID.
     public function update(UpdatePermissionRequest $request, $id)
     {
         $permission = Permission::find($id);
-        try{
+        try {
             Gate::allows('isSuperAdmin');
             $data = $request->all();
 
@@ -49,9 +48,9 @@ class PermissionController extends Controller
                 'permission' => $permission,
             ]);
 
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             return response()->json([
-                'status'=>0,
+                'status' => 0,
             ]);
         }
 

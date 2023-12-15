@@ -13,6 +13,7 @@ class UserController extends Controller
 {
     use UserAction;
 
+    // Retrieve all users from the database.
     public function index()
     {
         try {
@@ -25,11 +26,12 @@ class UserController extends Controller
             ]);
         } catch (\Exception $e) {
             return response()->json([
-                'status' => 10,
+                'status' => 0,
             ]);
         }
     }
 
+    // Retrieve the user with the given ID from the database.
     public function show($id)
     {
         try {
@@ -47,6 +49,7 @@ class UserController extends Controller
         }
     }
 
+    // Update the user with the new data.
     public function update(UserUpdateRequest $request, $id)
     {
         try {
@@ -72,7 +75,7 @@ class UserController extends Controller
     }
 
 
-
+    // Delete the user.
     public function delete(int $id)
     {
 

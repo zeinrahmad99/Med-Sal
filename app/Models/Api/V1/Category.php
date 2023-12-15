@@ -43,11 +43,13 @@ class Category extends Model
         return $this->hasMany(Service::class, 'category_id');
     }
 
+    // apply the given filters to the query.
     public function ScopeFilter($query, QueryFilter $filters)
     {
         return $filters->apply($query);
     }
 
+    // add a where clause to the query to filter for records with a 'status' value of 'active'.
     public function scopeActive($query)
     {
         return $query->where('status', 'active');

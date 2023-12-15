@@ -19,13 +19,14 @@ use App\Models\Api\V1\ProviderProfileUpdateRequest;
 class ProviderController extends Controller
 {
 
+    // Update the provider's profile update request.
     public function updateRequest(UpdateProviderRequest $request, $id)
     {
         $provider = Provider::find($id);
         try {
             return DB::transaction(
                 function () use ($provider, $request) {
-                    $this->authorize('update',$provider);
+                    $this->authorize('update', $provider);
                     $requestData = $request->all();
                     $requestData['provider_id'] = $provider->id;
 
@@ -50,6 +51,7 @@ class ProviderController extends Controller
         }
     }
 
+    // Delete a provider.
     public function delete(int $id)
     {
 
@@ -76,7 +78,7 @@ class ProviderController extends Controller
         ]);
     }
 
-    /* Display the products, services of each service provider */
+    // Display the products, services of each service provider 
     public function show($id)
     {
         try {
@@ -103,7 +105,7 @@ class ProviderController extends Controller
             ]);
         }
     }
-    /** Approve request service provider */
+    // Approve request service provider 
     public function approveProvider($id)
     {
         try {
@@ -125,8 +127,7 @@ class ProviderController extends Controller
         }
     }
 
-    /**reject  request service provider */
-
+    // reject  request service provider 
     public function rejectProvider($id)
     {
 
@@ -148,9 +149,8 @@ class ProviderController extends Controller
             ]);
         }
     }
-    /** monthly reports */
 
-
+    // Generate a monthly report for services provided by a provider.
     public function reportService($provider)
     {
 
@@ -182,7 +182,7 @@ class ProviderController extends Controller
         }
     }
 
-
+    // Generate a monthly report for products sold by a provider.
     public function reportProduct($provider)
     {
 

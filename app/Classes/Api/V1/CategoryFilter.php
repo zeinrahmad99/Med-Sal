@@ -9,6 +9,8 @@ use App\Traits\Api\V1\Filters;
 class CategoryFilter extends QueryFilter
 {
     use Filters;
+
+    // Search categories by name.
     public function searchByCategoryName($name)
     {
         return $this->query
@@ -16,6 +18,7 @@ class CategoryFilter extends QueryFilter
             ->active();
     }
 
+    // Search products within a category by name.
     public function searchProductsByCategoryName($name)
     {
         return $this->query
@@ -27,7 +30,7 @@ class CategoryFilter extends QueryFilter
             ]);
     }
 
-
+    // Search services within a category by name.
     public function searchServicesByCategoryName($name)
     {
         return $this->query
@@ -37,9 +40,9 @@ class CategoryFilter extends QueryFilter
                     $query->active();
                 }
             ]);
-        // ;
     }
 
+    // Search services and products within a category by name.
     public function searchServicesProductsByCategoryName($name)
     {
         return $this->query
@@ -54,6 +57,7 @@ class CategoryFilter extends QueryFilter
             ]);
     }
 
+    // Search doctors by service name within a category.
     public function searchDoctorsByServiceName($serviceName)
     {
         return $this->query
@@ -68,6 +72,7 @@ class CategoryFilter extends QueryFilter
             ->active();
     }
 
+    // Search services within a certain distance from a location.
     public function searchServicesByLocation($location, $distance = 1)
     {
         [$latitude, $longitude] = explode(',', $location);
@@ -75,6 +80,7 @@ class CategoryFilter extends QueryFilter
         return $this->buildQueryForLocationSearch($latitude, $longitude, $distance);
     }
 
+    // Search services within the nearest distance from a location.
     public function searchServicesByNearestDistance($location, $distance = 1, $sortByDistance = true)
     {
         [$latitude, $longitude] = explode(',', $location);

@@ -20,30 +20,26 @@ class CategoryController extends Controller
      */
     public function index()
     {
-      if(auth('sanctum')->check() && auth('sanctum')->user()->can('viewAny',Category::class)){
+        if (auth('sanctum')->check() && auth('sanctum')->user()->can('viewAny', Category::class)) {
 
-        $category=Category::all();
+            $category = Category::all();
 
-      }
-      else{
-        if(app()->getLocale() == 'ar')
-            {
-                $category=Category::where('status','active')->select('name_'.app()->getLocale(),'description_'.app()->getLocale())->get();
+        } else {
+            if (app()->getLocale() == 'ar') {
+                $category = Category::where('status', 'active')->select('name_' . app()->getLocale(), 'description_' . app()->getLocale())->get();
+            } else {
+                $category = Category::where('status', 'active')->select('name', 'description')->get();
             }
-            else
-            {
-                $category=Category::where('status','active')->select('name','description')->get();
-            }
-      }
+        }
 
 
         return response()->json([
             'status' => 1,
             'categories' => $category,
         ]);
-}
+    }
 
-
+    // This function performs a search for categories based on the given filters.
     public function search(CategoryFilter $filters)
     {
         $categories = Category::filter($filters)->get();
@@ -81,13 +77,13 @@ class CategoryController extends Controller
      */
     public function show($id)
     {
-        if(auth('sanctum')->check() && auth('sanctum')->user()->can('viewAny',Category::class)){
-           $category=Category::find($id);
-        }else{
+        if (auth('sanctum')->check() && auth('sanctum')->user()->can('viewAny', Category::class)) {
+            $category = Category::find($id);
+        } else {
             if (app()->getLocale() == 'ar') {
-                $category = Category::where('status','active')->where('id', $id)->select('name_' . app()->getLocale(), 'description_' . app()->getLocale())->get();
+                $category = Category::where('status', 'active')->where('id', $id)->select('name_' . app()->getLocale(), 'description_' . app()->getLocale())->get();
             } else {
-                $category = Category::where('status','active')->where('id', $id)->select('name', 'description')->get();
+                $category = Category::where('status', 'active')->where('id', $id)->select('name', 'description')->get();
             }
         }
 
