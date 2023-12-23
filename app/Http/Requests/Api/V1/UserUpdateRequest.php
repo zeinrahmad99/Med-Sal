@@ -4,6 +4,7 @@ namespace App\Http\Requests\Api\V1;
 
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UserUpdateRequest extends FormRequest
@@ -24,7 +25,7 @@ class UserUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => 'email|unique:users',
+            'email' => ['email', Rule::unique('users', 'email')->ignore($this->route('id'))],
             'password' => ['confirmed', Password::min(8)->letters()->numbers()],
         ];
     }
