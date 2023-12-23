@@ -24,9 +24,7 @@ class CategoryFilter extends QueryFilter
         return $this->query
             ->where('name', $name)
             ->with([
-                'products' => function ($query) {
-                    $query->active();
-                }
+                'products' => fn($query) => $query->active()
             ]);
     }
 
@@ -36,9 +34,7 @@ class CategoryFilter extends QueryFilter
         return $this->query
             ->where('name', $name)
             ->with([
-                'services' => function ($query) {
-                    $query->active();
-                }
+                'services' => fn($query) => $query->active()
             ]);
     }
 
@@ -48,12 +44,8 @@ class CategoryFilter extends QueryFilter
         return $this->query
             ->where('name', $name)
             ->with([
-                'services' => function ($query) {
-                    $query->active();
-                },
-                'products' => function ($query) {
-                    $query->active();
-                }
+                'services' => fn($query) => $query->active(),
+                'products' => fn($query) => $query->active()
             ]);
     }
 
@@ -61,13 +53,9 @@ class CategoryFilter extends QueryFilter
     public function searchDoctorsByServiceName($serviceName)
     {
         return $this->query
-            ->whereHas('services', function ($query) use ($serviceName) {
-                $query->where('name', $serviceName)->active();
-            })
+            ->whereHas('services', fn($query) => $query->where('name', $serviceName)->active())
             ->with([
-                'providers' => function ($query) {
-                    $query->active();
-                }
+                'providers' => fn($query) => $query->active()
             ])
             ->active();
     }

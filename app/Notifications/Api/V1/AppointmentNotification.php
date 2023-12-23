@@ -10,12 +10,12 @@ use Illuminate\Notifications\Notification;
 class AppointmentNotification extends Notification
 {
     use Queueable;
-    private $appointment;
-    private $message;
+    // private $appointment;
+    // private $message;
     /**
      * Create a new notification instance.
      */
-    public function __construct($appointment)
+    public function __construct(private $appointment)
     {
         $this->appointment=$appointment;
     }

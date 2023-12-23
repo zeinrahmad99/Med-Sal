@@ -23,10 +23,10 @@ class CreateCategoryRequest extends FormRequest
     {
         return [
             'admin_id'=>'required|exists:admins,admin_id',
-            'name' => 'required|string',
-            'name_ar' =>'required|string',
-            'description'=>'required|string',
-            'description_ar' =>'required|string',
+            'name' => 'required|string|min:0|max:50|unique:categories,name',
+            'name_ar' =>'required|string|min:0|max:50|unique:categories,name',
+            'description'=>'required|string|min:0|max:500',
+            'description_ar' =>'required|string|min:0|max:500',
         ];
     }
 }

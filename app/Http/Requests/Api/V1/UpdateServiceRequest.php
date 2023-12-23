@@ -24,11 +24,11 @@ class UpdateServiceRequest extends FormRequest
         return [
             'category_id' => 'exists:categories,id',
             'service_location_id' => 'exists:service_locations,id',
-            'name' => 'string',
-            'name_ar' => 'string',
-            'description' => 'string',
-            'description_ar' => 'string',
-            'price' => 'numeric|min:0',
+            'name' => 'string|min:0|max:50',
+            'name_ar' => 'string|min:0|max:50',
+            'description' => 'string|min:0|max:300',
+            'description_ar' => 'string|min:0|max:300',
+            'price' => 'numeric|min:0|max:10000000000000',
             'status' => 'in:active,inactive,pending,unaccept',
             'discount' => 'numeric|min:0',
 

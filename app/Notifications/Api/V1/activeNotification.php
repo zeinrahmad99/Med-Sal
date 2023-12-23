@@ -11,16 +11,17 @@ use Illuminate\Notifications\Notification;
 class activeNotification extends Notification
 {
     use Queueable;
-    private $serviceOrproduct;
-    private $message;
+    // private $serviceOrproduct;
+    // private $message;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct($serviceOrproduct,$message)
+    public function __construct(private $serviceOrproduct,private $message)
+    // public function __construct($serviceOrproduct,$message)
     {
         $this->serviceOrproduct=$serviceOrproduct;
-        $this->message=$message;
+        // $this->message=$message;
     }
 
     /**

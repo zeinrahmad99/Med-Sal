@@ -14,7 +14,7 @@ class CreateProductRequest extends FormRequest
         return true;
     }
 
-    /**
+    /** 
      * Get the validation rules that apply to the request.
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
@@ -22,17 +22,17 @@ class CreateProductRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'provider_id' => 'required|exists:providers,id',
-            'category_id' => 'required|exists:categories,id',
-            'name' => 'required|string',
-            'name_ar' => 'required|string',
-            'description' => 'required|string',
-            'description_ar' => 'required|string',
+            'provider_id' => ['required', 'exists:providers,id'],
+            'category_id' => ['required', 'exists:categories,id'],
+            'name' => ['required', 'string', 'min:0', 'max:50'],
+            'name_ar' => ['required', 'string', 'min:0', 'max:50'],
+            'description' => ['required', 'string', 'min:0', 'max:300'],
+            'description_ar' => ['required', 'string', 'min:0', 'max:300'],
             'images' => ['required', 'array', 'min:1', 'max:2'],
             'images.*' => ['mimes:jpeg,jpg,png', 'max:2048'],
-            'price' => 'required|numeric',
-            'quantity' => 'required|integer',
-            'discount' => 'required|sometimes|numeric|min:0',
+            'price' => ['required', 'numeric', 'min:0', 'max:10000000000000'],
+            'quantity' => ['required', 'integer', 'min:1', 'max:100'],
+            'discount' => ['required', 'sometimes', 'numeric', 'min:0'],
         ];
     }
 }

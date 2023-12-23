@@ -10,16 +10,16 @@ use Illuminate\Notifications\Notification;
 class ProviderNotification extends Notification
 {
     use Queueable;
-    private $provider;
-    private $message;
+    // private $provider;
+    // private $message;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct($provider,$message)
+    public function __construct(private $provider,private $message)
     {
         $this->provider=$provider;
-        $this->message=$message;
+        // $this->message=$message;
     }
 
     /**

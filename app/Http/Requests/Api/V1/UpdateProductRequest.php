@@ -22,16 +22,16 @@ class UpdateProductRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'provider_id' => 'exists:providers,id',
-            'category_id' => 'exists:categories,id',
-            'name' => 'string',
-            'name_ar' => 'string',
-            'description' => 'string',
-            'description_ar' => 'string',
-            'price' => 'numeric',
-            'status' => 'in:active,inactive,pending,unaccept',
-            'discount' => 'numeric|min:0',
-            'quantity' => 'integer',
+            'provider_id' => ['exists:providers,id'],
+            'category_id' => ['exists:categories,id'],
+            'name' => ['string', 'min:0', 'max:50'],
+            'name_ar' => ['string', 'min:0', 'max:50'],
+            'description' => ['string', 'min:0', 'max:300'],
+            'description_ar' => ['string', 'min:0', 'max:300'],
+            'price' => ['numeric', 'min:0', 'max:10000000000000'],
+            'status' => ['in:active,inactive,pending,unaccept'],
+            'discount' => ['numeric', 'min:0'],
+            'quantity' => ['integer', 'min:1', 'max:100'],
             'images' => ['array', 'min:1', 'max:2'],
             'images.*' => ['mimes:jpeg,jpg,png', 'max:2048'],
 

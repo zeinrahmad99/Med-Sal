@@ -32,7 +32,7 @@ class AuthController extends Controller
         ]);
 
         $this->EmailVerification($user);
-
+        // event(new Registered($user));
 
         $token = $user->createToken('api_token')->plainTextToken;
 
@@ -49,7 +49,7 @@ class AuthController extends Controller
     {
         $verificationCode = mt_rand(100000, 999999);
 
-        Cache::put('verification_code:' . $user->id, $verificationCode, 60);
+        Cache::put('verification_code:' . $user->id, $verificationCode, now()->addHour());
 
         event(new Registered($user));
     }
@@ -166,10 +166,12 @@ class AuthController extends Controller
             // Store PDF files in public/documents
             PDFs::storePDF($request->file('document'), $pdfName, 'public/documents/');
 
-            $verificationCode = mt_rand(100000, 999999);
-            Cache::put('verification_code:' . $user->id, $verificationCode, 60);
+            // $verificationCode = mt_rand(100000, 999999);
+            // Cache::put('verification_code:' . $user->id, $verificationCode, 60);
 
-            event(new Registered($user));
+            // event(new Registered($user));
+            $this->EmailVerification($user);
+            
 
             $token = $user->createToken('api_token')->plainTextToken;
 

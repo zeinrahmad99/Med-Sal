@@ -10,16 +10,16 @@ use Illuminate\Notifications\Notification;
 class OrderNotification extends Notification
 {
     use Queueable;
-    private $message;
-    private $product;
+    // private $message;
+    // private $product;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct($product,$message)
+    public function __construct(private $product,private $message)
     {
         $this->product=$product;
-        $this->message=$message;
+        // $this->message=$message;
     }
 
     /**

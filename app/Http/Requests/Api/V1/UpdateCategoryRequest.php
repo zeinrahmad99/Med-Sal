@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Api\V1;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateCategoryRequest extends FormRequest
@@ -22,12 +23,12 @@ class UpdateCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'admin_id'=>'exists:admins,admin_id',
-            'name' => 'string',
-            'name_ar' =>'string',
-            'description'=>'string',
-            'description_ar' =>'string',
-            'status' =>'in:active,inactive,archived',
+            'admin_id' => ['exists:admins,admin_id'],
+            'name' => ['string', 'min:0', 'max:50', Rule::unique('categories', 'name')->ignore($this->route('id'))],
+            'name_ar' => ['string', 'min:0', 'max:50', Rule::unique('categories', 'name')->ignore($this->route('id'))],
+            'description' => ['string', 'min:0', 'max:500'],
+            'description_ar' => ['string', 'min:0', 'max:500'],
+            'status' => ['in:active,inactive,archived'],
         ];
     }
 }

@@ -6,6 +6,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Cache;
+use App\Notifications\Api\V1\VerificationEmailNotification;
 
 class SendVerificationEmailListener implements ShouldQueue
 {
@@ -28,8 +29,9 @@ class SendVerificationEmailListener implements ShouldQueue
         // Retrieve the verification code from cache
         $verificationCode = Cache::get('verification_code:' . $user->id);
 
-        Mail::send('emails.confirmation', ['verificationCode' => $verificationCode], function ($message) use ($user) {
-            $message->to($user->email)->subject('Confirm Your Email');
-        });
+        $user->notify(new VerificationEmailNotification($verificationCode));
+        // Mail::send('emails.confirmation', ['verificationCode' => $verificationCode], function ($message) use ($user) {
+        //     $message->to($user->email)->subject('Confirm Your Email');
+        // });
     }
 }

@@ -7,18 +7,16 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class AdminNotification extends Notification
+class VerificationEmailNotification extends Notification
 {
     use Queueable;
-
-    // private $provider;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(private $provider)
+    public function __construct(private $verificationCode)
     {
-        $this->provider=$provider;
+        $this->verificationCode = $verificationCode;
     }
 
     /**
@@ -28,9 +26,20 @@ class AdminNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['database'];
+        return ['mail'];
     }
 
+    /**
+     * Get the mail representation of the notification.
+     */
+    public function toMail(object $notifiable): MailMessage
+    {
+        return (new MailMessage)
+            ->subject('Confirm Your Email')
+            // ->view('emails.confirmation', ['verificationCode' => $this->verificationCode]);
+            ->markdown('emails.confirmation',['verificationCode'=>$this->verificationCode]);
+        
+    }
 
     /**
      * Get the array representation of the notification.
@@ -40,8 +49,7 @@ class AdminNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'provider'=>$this->provider->user->email,
-            'message'=>'request to update his information'
+            // 'verificationCode'=>$this->verificationCode,
         ];
     }
 }

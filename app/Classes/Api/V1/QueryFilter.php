@@ -46,19 +46,15 @@ abstract class QueryFilter
 
         return $this->query
             ->with([
-                'services' => function ($query) {
-                    $query->active();
-                },
-                'providers' => function ($query) {
-                    $query->active();
-                },
+                'services' => fn($query) => $query->active(),
+                'providers' => fn($query) => $query->active(),
                 'providers.serviceLocations'
             ])
-            ->whereHas('providers.serviceLocations', function ($query) use ($haversineFormula, $distance) {
-                $query->selectRaw("service_locations.*, $haversineFormula AS distance")
-                    ->having('distance', '<=', $distance)
-                    ->orderBy('distance');
-            });
+            ->whereHas('providers.serviceLocations', fn($query) => $query
+                ->selectRaw("service_locations.*, $haversineFormula AS distance")
+                ->having('distance', '<=', $distance)
+                ->orderBy('distance')
+            );
     }
 
     // Build the query for searching nearest services.
@@ -67,12 +63,8 @@ abstract class QueryFilter
         $query = $this->query
             ->select('categories.*')
             ->with([
-                'services' => function ($query) {
-                    $query->active();
-                },
-                'providers' => function ($query) {
-                    $query->active();
-                }
+                'services' => fn($query) => $query->active(),
+                'providers' => fn($query) => $query->active(),
             ])
             ->join('providers', 'categories.id', '=', 'providers.service_type_id')
             ->join('service_locations as sl', 'providers.id', '=', 'sl.provider_id')
