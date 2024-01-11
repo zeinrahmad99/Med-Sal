@@ -17,28 +17,10 @@ class ServiceController extends Controller
     public function index()
     {
         if (app()->getLocale() == 'ar') {
-            $services = Service::select('category_id', 'service_location_id', 'name_' . app()->getLocale(), 'description_' . app()->getLocale(), 'price', 'discount', 'status')->get();
+            $services = Service::select('category_id', 'service_location_id', 'name_' . app()->getLocale(), 'description_' . app()->getLocale(), 'price', 'discount', 'status', 'created_at', 'updated_at')->get();
             ;
         } else {
-            $services = Service::select('category_id', 'service_location_id', 'name', 'description', 'price', 'discount', 'status')->get();
-            ;
-
-        }
-
-        return response()->json([
-            'status' => $services ? 1 : 0,
-            'services' => $services,
-        ]);
-    }
-
-    // Get all services for authenticated users.
-    public function indexAuth()
-    {
-        if (app()->getLocale() == 'ar') {
-            $services = Service::select('category_id', 'service_location_id', 'name_' . app()->getLocale(), 'description_' . app()->getLocale(), 'price', 'discount', 'status')->get();
-            ;
-        } else {
-            $services = Service::select('category_id', 'service_location_id', 'name', 'description', 'price', 'discount', 'status')->get();
+            $services = Service::select('category_id', 'service_location_id', 'name', 'description', 'price', 'discount', 'status', 'created_at', 'updated_at')->get();
             ;
 
         }
@@ -53,9 +35,9 @@ class ServiceController extends Controller
     public function show($id)
     {
         if (app()->getLocale() == 'ar') {
-            $service = Service::firstWhere('id', $id)->select('category_id', 'service_location_id', 'name_' . app()->getLocale(), 'description_' . app()->getLocale(), 'price', 'discount', 'status')->first();
+            $service = Service::firstWhere('id', $id)->select('category_id', 'service_location_id', 'name_' . app()->getLocale(), 'description_' . app()->getLocale(), 'price', 'discount', 'status', 'created_at', 'updated_at')->first();
         } else {
-            $service = Service::firstWhere('id', $id)->select('category_id', 'service_location_id', 'name', 'description', 'price', 'discount', 'status')->first();
+            $service = Service::firstWhere('id', $id)->select('category_id', 'service_location_id', 'name', 'description', 'price', 'discount', 'status', 'created_at', 'updated_at')->first();
         }
 
         return response()->json([

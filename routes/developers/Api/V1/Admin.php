@@ -8,6 +8,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/admin/{id}', [AdminController::class, 'create']);
     Route::get('/admin/{id}', [AdminController::class, 'show']);
     Route::delete('/admin/{id}', [AdminController::class, 'delete']);
+    Route::get('/index/admin/permissions', [AdminController::class, 'indexAdminPermissions']);
+    Route::get('/index/provider/permissions', [AdminController::class, 'indexProviderPermissions']);
+
+
 
 });
 

@@ -6,8 +6,9 @@ use App\Models\Api\V1\User;
 use Illuminate\Http\Request;
 use App\Traits\Api\V1\UserAction;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\V1\UserUpdateRequest;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\Api\V1\UserUpdateRequest;
 
 class UserController extends Controller
 {
@@ -58,6 +59,10 @@ class UserController extends Controller
             $data = $request->all();
             if ($request->has('email') && $user->email !== $request->input('email')) {
                 $this->resetEmailVerification($user);
+            }
+
+            if ($request->has('password') && $request->filled('password')) {
+                $data['password'] = bcrypt($request->input('password'));
             }
 
             $user->update($data);

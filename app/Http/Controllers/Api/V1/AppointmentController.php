@@ -20,37 +20,55 @@ class AppointmentController extends Controller
      */
     public function index()
     {
-        try{
-        Gate::authorize('isProvider');
-            $app=Appointment::whereHas('service.serviceLocation.provider.user',function($query){
-                $query->where('id',Auth::id());
+        try {
+            Gate::authorize('isProvider');
+            $app = Appointment::whereHas('service.serviceLocation.provider.user', function ($query) {
+                $query->where('id', Auth::id());
             })->get();
             return response()->json([
                 'status' => 1,
                 'appointments' => $app,
             ]);
-        }catch(\Exception $e)
-            {
-                return response()->json([
-                    'status' => 0
-                ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 0
+            ]);
 
-            }
+        }
     }
 
-      /**add new appointment */
+    // mySchedule
+    public function mySchedule()
+    {
+        try {
+            // $user = Auth::user();
+            // $appointments = $user->appointments->where('status','valid');
+            $appointments = auth()->user()->appointments->where('status','valid');
+
+
+            return response()->json([
+                'status' => 1,
+                'appointments' => $appointments,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 0,
+            ]);
+        }
+    }
+
+    /**add new appointment */
     public function store(CreateAppointmentRequest $request)
     {
-        $data = array_merge($request->all(), ['patient_id' => Auth::id() ,'status' => 'valid']);
-        return DB::transaction(function () use ($data)
-        {
+        $data = array_merge($request->all(), ['patient_id' => Auth::id(), 'status' => 'valid']);
+        return DB::transaction(function () use ($data) {
             $appointment = Appointment::create($data);
 
-            $provider= $appointment->service->serviceLocation->provider->user;
+            $provider = $appointment->service->serviceLocation->provider->user;
             $provider->notify(new AppointmentNotification($appointment));
             return response()->json([
                 'status' => 1,
-                'message'=>'Add Appointment Successfully',
+                'message' => 'Add Appointment Successfully',
             ]);
 
         });
@@ -61,35 +79,35 @@ class AppointmentController extends Controller
      */
     public function show($id)
     {
-        try{
-            $appointment=Appointment::findOrfail($id);
-            $this->authorize('view',$appointment);
+        try {
+            $appointment = Appointment::findOrfail($id);
+            $this->authorize('view', $appointment);
             return response()->json([
                 'status' => 1,
                 'appointment' => $appointment,
             ]);
-        }catch(\Exception $e){
-                return response()->json([
-                    'status' => 0,
-                ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 0,
+            ]);
         }
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateAppointmentRequest $request,$id)
+    public function update(UpdateAppointmentRequest $request, $id)
     {
-        try{
+        try {
             $appointment = Appointment::findOrfail($id);
-            $this->authorize('update',$appointment);
-            $data=$request->all();
+            $this->authorize('update', $appointment);
+            $data = $request->all();
             $appointment->update($data);
             return response()->json([
                 'status' => 1,
-                'message'=>'Update Appointment Successfully',
+                'message' => 'Update Appointment Successfully',
             ]);
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             return response()->json([
                 'status' => 0,
             ]);
@@ -103,15 +121,15 @@ class AppointmentController extends Controller
     public function delete($id)
     {
 
-        try{
-            $appointment=Appointment::findOrfail($id);
-            $this->authorize('delete',$appointment);
+        try {
+            $appointment = Appointment::findOrfail($id);
+            $this->authorize('delete', $appointment);
             $appointment->delete();
             return response()->json([
                 'status' => 1,
-                'message'=>'Delete Appointment Successfully',
+                'message' => 'Delete Appointment Successfully',
             ]);
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             return response()->json([
                 'status' => 0,
             ]);
@@ -120,16 +138,17 @@ class AppointmentController extends Controller
 
     /** change a status appointment to done  */
 
-    public function doneAppointment($id){
+    public function doneAppointment($id)
+    {
 
-        try{
-            $appointment=Appointment::find($id);
-            $this->authorize('done',$appointment);
-            $appointment->update(['status'=>'done']);
+        try {
+            $appointment = Appointment::find($id);
+            $this->authorize('done', $appointment);
+            $appointment->update(['status' => 'done']);
             return response()->json([
-                'status'=>1,
+                'status' => 1,
             ]);
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             return response()->json([
                 'status' => 0,
             ]);
@@ -138,16 +157,17 @@ class AppointmentController extends Controller
 
     /**change status appointment to canceled */
 
-    public function cancelAppointment($id){
+    public function cancelAppointment($id)
+    {
 
-        try{
-            $appointment=Appointment::find($id);
-            $this->authorize('canceled',$appointment);
-            $appointment->update(['status'=>'canceled']);
+        try {
+            $appointment = Appointment::find($id);
+            $this->authorize('canceled', $appointment);
+            $appointment->update(['status' => 'canceled']);
             return response()->json([
-                'status'=>1,
+                'status' => 1,
             ]);
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             return response()->json([
                 'status' => 0,
             ]);

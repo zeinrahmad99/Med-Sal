@@ -27,11 +27,11 @@ class Product extends Model
 
     public function provider()
     {
-        return $this->belongsTo(Provider::class,'provider_id');
+        return $this->belongsTo(Provider::class, 'provider_id');
     }
     public function category()
     {
-        return $this->belongsTo(Category::class,'category_id');
+        return $this->belongsTo(Category::class, 'category_id');
     }
 
     public function carts()
@@ -48,4 +48,17 @@ class Product extends Model
     {
         return $query->where('status', 'active');
     }
+
+    public function getImagesAttribute($value)
+    {
+        $images = explode(',', $value);
+        $imageUrls = [];
+
+        foreach ($images as $image) {
+            $imageUrls[] = "/storage/images/$image";
+        }
+
+        return $imageUrls;
+    }
+
 }

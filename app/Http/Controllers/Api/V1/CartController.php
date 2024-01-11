@@ -9,17 +9,6 @@ use App\Http\Requests\Api\V1\StoreCartRequest;
 
 class CartController extends Controller
 {
-    //   public function index()
-    //  {
-
-    //      $carts = Cart::all();
-
-    //      return response()->json([
-    //          'status' => $carts ? 1 : 0,
-    //          'carts' => $carts,
-    //      ]);
-    //  }  
-
     // Create a new cart using the provided data
     public function store(StoreCartRequest $request)
     {

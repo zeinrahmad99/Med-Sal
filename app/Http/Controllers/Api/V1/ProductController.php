@@ -12,41 +12,69 @@ use Illuminate\Support\Facades\Gate;
 use App\Notifications\Api\V1\activeNotification;
 use Illuminate\Support\Facades\DB;
 use App\Traits\Api\V1\Images;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Collection;
 
 class ProductController extends Controller
 {
-    // Get all products.
+    // get all products data
     public function index()
     {
-        if (app()->getLocale() == 'ar') {
-            $products = Product::select('provider_id', 'category_id', 'name_' . app()->getLocale(), 'description_' . app()->getLocale(), 'price', 'discount', 'quantity', 'status')->get();
-        } else {
-            $products = Product::select('provider_id', 'category_id', 'name', 'description', 'price', 'discount', 'quantity', 'status')->get();
+        $products = Product::all();
+        try {
+            foreach ($products as $p) {
+                if (auth('sanctum')->check()) {
+                    if (($p->status != 'active' && auth('sanctum')->user()->can('admin', $p)) || $p->status == 'active') {
+                        $product[] = $p;
+                    }
+                } else {
+                    if (app()->getLocale() == 'ar') {
+                        $product = Product::where('status', 'active')->
+                            select('id', 'provider_id', 'category_id', 'name_' . app()->getLocale(), 'description_' . app()->getLocale(), 'price', 'discount', 'quantity', 'status', 'images', 'created_at', 'updated_at')->get();
+                    } else {
+                        $product = Product::where('status', 'active')->select('id', 'provider_id', 'category_id', 'name', 'description', 'price', 'discount', 'quantity', 'status', 'images', 'created_at', 'updated_at')->get();
+                    }
+                }
+            }
+            return response()->json([
+                'status' => 1,
+                'products' => $product,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 0
+            ]);
         }
-
-        return response()->json([
-            'status' => $products ? 1 : 0,
-            'products' => $products,
-        ]);
     }
 
-    // Get a specific product by ID.
+    // get a product data
     public function show($id)
     {
-
-        if (app()->getLocale() == 'ar') {
-            $product = Product::firstwhere('id', $id)->select('provider_id', 'category_id', 'name_' . app()->getLocale(), 'description_' . app()->getLocale(), 'price', 'discount', 'quantity', 'status')->first();
-        } else {
-            $product = Product::firstwhere('id', $id)->select('provider_id', 'category_id', 'name', 'description', 'price', 'discount', 'quantity', 'status')->first();
+        $product = Product::find($id);
+        try {
+            if (auth('sanctum')->check()) {
+                if (($product->status != 'active' && auth('sanctum')->user()->can('admin', $product)) || $product->status == 'active') {
+                    $products = $product;
+                }
+            } else {
+                if (app()->getLocale() == 'ar') {
+                    $products = Product::where('id', $id)->where('status', 'active')->select('provider_id', 'category_id', 'name_' . app()->getLocale(), 'description_' . app()->getLocale(), 'price', 'discount', 'quantity', 'status', 'images', 'created_at', 'updated_at')->first();
+                } else {
+                    $products = Product::where('id', $id)->where('status', 'active')->select('provider_id', 'category_id', 'name', 'description', 'price', 'discount', 'quantity', 'status', 'images', 'created_at', 'updated_at')->first();
+                }
+            }
+            return response()->json([
+                'status' => 1,
+                'product' => $products
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 0
+            ]);
         }
-
-        return response()->json([
-            'status' => $product ? 1 : 0,
-            'product' => $product,
-        ]);
     }
 
-    // Create a new product.
+    // Create a new product
     public function store(CreateProductRequest $request)
     {
         return DB::transaction(function () use ($request) {
@@ -70,11 +98,18 @@ class ProductController extends Controller
 
                         // Add the image filename to the array
                         $images[] = $filename;
+                        // array_push($images,$filename);
                     }
                 }
 
                 // Add the images array to the data array
-                $data['images'] = json_encode($images);
+                $data['images'] = implode(',', $images);
+
+                // Process the images
+                // $processedImages = Images::processImages($data['images']);
+
+                // $data['images'] = $processedImages;
+
 
                 $product = Product::create($data);
 
@@ -84,7 +119,8 @@ class ProductController extends Controller
 
                 return response()->json([
                     'status' => 1,
-                    'product' => $product,
+                    // 'product' => $product,
+                    // 'processedImages' => $processedImages
                 ]);
             } catch (\Exception $e) {
                 return response()->json([
@@ -105,12 +141,10 @@ class ProductController extends Controller
                 $data = $request->except('status');
 
                 if ($request->has('images')) {
-                    $decodedImages = json_decode($product->images);
+                    $existingImages = explode(',', $product->images);
 
-                    if (is_array($decodedImages)) {
-                        foreach ($decodedImages as $image) {
-                            Images::deleteImage($image, 'public/images');
-                        }
+                    foreach ($existingImages as $image) {
+                        Images::deleteImage($image, 'public/images');
                     }
 
                     $data['images'] = [];
@@ -118,15 +152,18 @@ class ProductController extends Controller
                     foreach ($request->file('images') as $image) {
                         $imageName = Images::giveImageRandomName($image);
                         Images::storeImage($image, $imageName, 'public/images');
-                        array_push($data['images'], $imageName);
+                        $data['images'][] = $imageName;
                     }
+
+                    // Convert the images array to a comma-separated string
+                    $data['images'] = implode(',', $data['images']);
                 }
 
                 $product->update($data);
 
                 return response()->json([
                     'status' => 1,
-                    'product' => $product,
+                    // 'product' => $product,
                 ]);
             } catch (\Exception $e) {
                 return response()->json([

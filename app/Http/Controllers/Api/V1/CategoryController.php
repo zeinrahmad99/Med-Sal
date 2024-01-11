@@ -15,6 +15,26 @@ use Illuminate\Support\Facades\Auth;
 class CategoryController extends Controller
 {
 
+    public function getDoctorCategories()
+    {
+        if (auth('sanctum')->check() && auth('sanctum')->user()->can('viewAny', Category::class)) {
+
+            $doctorCategories = Category::where('name', 'like', 'Dr%');
+
+        } else {
+            if (app()->getLocale() == 'ar') {
+                $doctorCategories = Category::where('name', 'like', 'Dr%')->active()->select('id', 'admin_id', 'name_' . app()->getLocale(), 'description_' . app()->getLocale(), 'status')->get();
+            } else {
+                $doctorCategories = Category::where('name', 'like', 'Dr%')->active()->select('id', 'admin_id', 'name', 'description', 'status')->get();
+            }
+        }
+
+        return response()->json([
+            'status' => 1,
+            'categories' => $doctorCategories,
+        ]);
+    }
+
     /**
      * Display a listing of the resource.
      */

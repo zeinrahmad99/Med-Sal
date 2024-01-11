@@ -38,44 +38,86 @@ abstract class QueryFilter
         return $this->request->all();
     }
 
-
-    // Build the query for searching services by location.
     public function buildQueryForLocationSearch($latitude, $longitude, $distance)
     {
         $haversineFormula = $this->calculateHaversineDistance($latitude, $longitude, 'service_locations.latitude', 'service_locations.longitude');
 
-        return $this->query
-            ->with([
-                'services' => fn($query) => $query->active(),
-                'providers' => fn($query) => $query->active(),
-                'providers.serviceLocations'
-            ])
-            ->whereHas('providers.serviceLocations', fn($query) => $query
-                ->selectRaw("service_locations.*, $haversineFormula AS distance")
-                ->having('distance', '<=', $distance)
-                ->orderBy('distance')
-            );
+        if (app()->getLocale() == 'en') {
+            return $this->query->select('id', 'admin_id', 'name', 'description', 'status')
+                ->with([
+                    'services' => fn($query) => $query->active()->select('id', 'category_id', 'service_location_id', 'name', 'description', 'price', 'discount', 'status', 'created_at', 'updated_at'),
+                    'providers' => fn($query) => $query->active(),
+                    'providers.serviceLocations'
+                ])
+                ->whereHas(
+                    'providers.serviceLocations',
+                    fn($query) => $query
+                        ->selectRaw("service_locations.*, $haversineFormula AS distance")
+                        ->having('distance', '<=', $distance)
+                        ->orderBy('distance')
+                );
+        } else {
+            return $this->query->select('id', 'admin_id', 'name_ar', 'description_ar', 'status')
+                ->with([
+                    'services' => fn($query) => $query->active()->select('id', 'category_id', 'service_location_id', 'name_ar', 'description_ar', 'price', 'discount', 'status', 'created_at', 'updated_at'),
+                    'providers' => fn($query) => $query->active(),
+                    'providers.serviceLocations'
+                ])
+                ->whereHas(
+                    'providers.serviceLocations',
+                    fn($query) => $query
+                        ->selectRaw("service_locations.*, $haversineFormula AS distance")
+                        ->having('distance', '<=', $distance)
+                        ->orderBy('distance')
+                );
+        }
     }
+
 
     // Build the query for searching nearest services.
     public function buildQueryForNearestServices($latitude, $longitude, $distance, $sortByDistance)
     {
-        $query = $this->query
-            ->select('categories.*')
-            ->with([
-                'services' => fn($query) => $query->active(),
-                'providers' => fn($query) => $query->active(),
-            ])
-            ->join('providers', 'categories.id', '=', 'providers.service_type_id')
-            ->join('service_locations as sl', 'providers.id', '=', 'sl.provider_id')
-            ->selectRaw($this->calculateHaversineDistance($latitude, $longitude, 'sl.latitude', 'sl.longitude') . ' AS distance')
-            ->where('providers.deleted_at', null)
-            ->having('distance', '<=', $distance);
+        if (app()->getLocale() == 'en') {
 
-        if ($sortByDistance) {
-            $query->orderByRaw('distance');
+            $query = $this->query
+                // ->select('categories.*')
+                ->select('categories.id', 'categories.admin_id', 'categories.name', 'categories.description', 'categories.status')
+                ->with([
+                    'services' => fn($query) => $query->active()->select('id', 'category_id', 'service_location_id', 'name', 'description', 'price', 'discount', 'status', 'created_at', 'updated_at'),
+                    'providers' => fn($query) => $query->active(),
+                ])
+                ->join('providers', 'categories.id', '=', 'providers.service_type_id')
+                ->join('service_locations as sl', 'providers.id', '=', 'sl.provider_id')
+                ->selectRaw($this->calculateHaversineDistance($latitude, $longitude, 'sl.latitude', 'sl.longitude') . ' AS distance')
+                ->where('providers.deleted_at', null)
+                ->having('distance', '<=', $distance);
+
+            if ($sortByDistance) {
+                $query->orderByRaw('distance');
+            }
+
+            return $query;
+        } else {
+
+            $query = $this->query
+                // ->select('categories.*')
+                ->select('categories.id', 'categories.admin_id', 'categories.name_ar', 'categories.description_ar', 'categories.status')
+                ->with([
+                    'services' => fn($query) => $query->active()->select('id', 'category_id', 'service_location_id', 'name_ar', 'description_ar', 'price', 'discount', 'status', 'created_at', 'updated_at'),
+                    'providers' => fn($query) => $query->active(),
+                ])
+                ->join('providers', 'categories.id', '=', 'providers.service_type_id')
+                ->join('service_locations as sl', 'providers.id', '=', 'sl.provider_id')
+                ->selectRaw($this->calculateHaversineDistance($latitude, $longitude, 'sl.latitude', 'sl.longitude') . ' AS distance')
+                ->where('providers.deleted_at', null)
+                ->having('distance', '<=', $distance);
+
+            if ($sortByDistance) {
+                $query->orderByRaw('distance');
+            }
+
+            return $query;
         }
 
-        return $query;
     }
 }
