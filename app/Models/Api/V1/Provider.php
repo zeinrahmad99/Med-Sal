@@ -57,6 +57,7 @@ class Provider extends Model
 
 
     // Accessor for the document attribute
+    // we need to run this command on server php artisan storage:link
     public function getDocumentAttribute($value)
     {
         return '/storage/documents/' . $value;
