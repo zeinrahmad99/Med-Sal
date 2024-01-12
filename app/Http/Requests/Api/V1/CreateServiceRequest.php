@@ -28,6 +28,7 @@ class CreateServiceRequest extends FormRequest
             'name_ar' => 'required|string|min:0|max:50',
             'description' => 'required|string|min:0|max:300',
             'description_ar' => 'required|string|min:0|max:300',
+            'time_requested' => 'required|string',
             'price' => 'required|numeric|min:0|max:10000000000000',
             'discount' => 'required|sometimes|numeric|min:0',
         ];

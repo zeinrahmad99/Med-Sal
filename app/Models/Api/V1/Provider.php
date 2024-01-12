@@ -3,10 +3,11 @@
 namespace App\Models\Api\V1;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Provider extends Model
 {
@@ -52,5 +53,12 @@ class Provider extends Model
     public function scopeActive($query)
     {
         return $query->where('status', 'active');
+    }
+
+
+    // Accessor for the document attribute
+    public function getDocumentAttribute($value)
+    {
+        return '/storage/documents/' . $value;
     }
 }

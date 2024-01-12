@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('name_ar');
             $table->string('description');
             $table->string('description_ar');
+            $table->string('time_requested');
             $table->string('price');
             $table->string('discount')->default('0');
             $table->enum('status', ['active', 'inactive', 'pending', 'unaccept'])->default('pending');

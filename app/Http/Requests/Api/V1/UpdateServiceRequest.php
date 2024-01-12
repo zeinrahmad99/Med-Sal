@@ -28,6 +28,7 @@ class UpdateServiceRequest extends FormRequest
             'name_ar' => 'string|min:0|max:50',
             'description' => 'string|min:0|max:300',
             'description_ar' => 'string|min:0|max:300',
+            'time_requested' => 'string',
             'price' => 'numeric|min:0|max:10000000000000',
             'status' => 'in:active,inactive,pending,unaccept',
             'discount' => 'numeric|min:0',
