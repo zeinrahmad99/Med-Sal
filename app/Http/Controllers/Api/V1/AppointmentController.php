@@ -41,10 +41,7 @@ class AppointmentController extends Controller
     public function mySchedule()
     {
         try {
-            // $user = Auth::user();
-            // $appointments = $user->appointments->where('status','valid');
-            $appointments = auth()->user()->appointments->where('status','valid');
-
+            $appointments = auth()->user()->appointments->where('status', 'valid');
 
             return response()->json([
                 'status' => 1,
