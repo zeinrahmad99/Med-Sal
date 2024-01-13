@@ -39,6 +39,8 @@ class PermissionSeeder extends Seeder
         ['role_id'=>$provider->id,'ability'=>'reject order','ability_ar'=>'رفض الطلب'],
         ['role_id'=>$provider->id,'ability'=>'approve service','ability_ar'=>'قبول الخدمة'],
         ['role_id'=>$provider->id,'ability'=>'reject service','ability_ar'=>'رفض الخدمة'],
+        ['role_id'=>$provider->id,'ability'=>'user management','ability_ar'=>'ادارة المستخدمين'],
+
     ];
 
        Permission::insert($permission);

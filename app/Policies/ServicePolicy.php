@@ -44,7 +44,7 @@ class ServicePolicy
 
     public function accepted(User $user, Service $service){
         $role= Role::where('name',$user->role)->first();
-        $permission=Permission::where('role_id',$role->id)->where('ability','accepted service')->first();
+        $permission=Permission::where('role_id',$role->id)->where('ability','accept service')->first();
         return $user->id === $service->serviceLocation->provider->user->id && $permission->status === 'allow';
 
     } 
