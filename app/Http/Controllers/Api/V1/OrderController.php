@@ -16,28 +16,33 @@ use App\Notifications\Api\V1\OrderNotification;
 
 class OrderController extends Controller
 {
-    // Display a listing of the resource.
     // show provider order with products which related to provider hisself 
     public function show($id)
     {
         $order = Order::find($id);
         if (auth('sanctum')->user()->can('isProvider')) {
             $order = Order::where('id', $id)->select('id', 'patient_id', 'latitude', 'longitude', 'created_at', 'updated_at')
-            ->with('products'
-                , function ($query) use ($id) {
-                    $query->where('order_product.order_id', $id);
-                    $query->select('order_product.product_id', 'order_product.status', 'order_product.price', 'order_product.quantity','order_product.created_at as date_of_request','order_product.updated_at');
-                })->get();
+                ->with(
+                    'products'
+                    ,
+                    function ($query) use ($id) {
+                        $query->where('order_product.order_id', $id);
+                        $query->select('order_product.product_id', 'order_product.status', 'order_product.price', 'order_product.quantity', 'order_product.created_at as date_of_request', 'order_product.updated_at');
+                    }
+                )->get();
             return response()->json([
                 'status' => 1,
                 'order' => $order,
             ]);
         } else if (auth('sanctum')->user()->can('view', $order)) {
             $order = Order::where('id', $id)->select('id', 'patient_id', 'latitude', 'longitude', 'created_at', 'updated_at')
-        ->with('products'
-                , function ($query) use ($id) {
-                    $query->select('order_product.product_id', 'order_product.status', 'order_product.price', 'order_product.quantity','order_product.created_at as date_of_request','order_product.updated_at');
-                })->get();
+                ->with(
+                    'products'
+                    ,
+                    function ($query) use ($id) {
+                        $query->select('order_product.product_id', 'order_product.status', 'order_product.price', 'order_product.quantity', 'order_product.created_at as date_of_request', 'order_product.updated_at');
+                    }
+                )->get();
             return response()->json([
                 'status' => 1,
                 'order' => $order,
@@ -62,11 +67,14 @@ class OrderController extends Controller
                 $product = Product::find($order_product['product_id']);
                 $price = $product->price * $order_product['quantity'];
                 if ($product->quantity >= $order_product['quantity']) {
-                    $order->products()->attach($order->id,
-                        ['product_id' => $order_product['product_id'],
+                    $order->products()->attach(
+                        $order->id,
+                        [
+                            'product_id' => $order_product['product_id'],
                             'quantity' => $order_product['quantity'],
                             'price' => $price,
-                        ]);
+                        ]
+                    );
 
                     $cost += $price;
                     $order->update(['cost' => $cost]);

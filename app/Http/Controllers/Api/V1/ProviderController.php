@@ -20,6 +20,7 @@ use App\Models\Api\V1\ProviderProfileUpdateRequest;
 class ProviderController extends Controller
 {
 
+    // get all update requests for providers profile details
     public function indexUpdateRequestsProviders()
     {
         $provider = ProviderProfileUpdateRequest::all();
@@ -41,6 +42,7 @@ class ProviderController extends Controller
         }
     }
 
+    // get all providers where status is pending
     public function indexProviders()
     {
         $provider = Provider::where('status', 'pending')->get();
@@ -62,6 +64,7 @@ class ProviderController extends Controller
         }
     }
 
+    // get all providers
     public function index()
     {
         $provider = Provider::all();
@@ -83,6 +86,7 @@ class ProviderController extends Controller
         }
     }
 
+    // get provider data with user related data
     public function showProvider($id)
     {
         try {

@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Auth;
 class CategoryController extends Controller
 {
 
+    // Get all Doctor Categories
     public function getDoctorCategories()
     {
         if (auth('sanctum')->check() && auth('sanctum')->user()->can('viewAny', Category::class)) {
