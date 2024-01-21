@@ -45,7 +45,7 @@ class PermissionController extends Controller
 
             return response()->json([
                 'status' => 1,
-                'permission' => $permission,
+                // 'permission' => $permission,
             ]);
 
         } catch (\Exception $e) {

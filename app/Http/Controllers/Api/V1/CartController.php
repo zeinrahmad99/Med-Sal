@@ -18,7 +18,7 @@ class CartController extends Controller
 
         return response()->json([
             'status' => $cart ? 1 : 0,
-            'cart' => $cart
+            // 'cart' => $cart
         ]);
     }
 

@@ -69,7 +69,7 @@ class UserController extends Controller
 
             return response()->json([
                 'status' => 1,
-                'user' => $user,
+                // 'user' => $user,
             ]);
 
         } catch (\Exception $e) {

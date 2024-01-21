@@ -130,7 +130,7 @@ class ProviderController extends Controller
 
                     return response()->json([
                         'status' => 1,
-                        'provider' => $updateRequest,
+                        // 'provider' => $updateRequest,
                         'message' => 'تم إرسال طلب التحديث بنجاح',
 
                     ]);

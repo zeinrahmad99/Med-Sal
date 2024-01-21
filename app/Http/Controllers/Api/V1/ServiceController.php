@@ -62,7 +62,7 @@ class ServiceController extends Controller
 
             return response()->json([
                 'status' => 1,
-                'service' => $service,
+                // 'service' => $service,
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -86,7 +86,7 @@ class ServiceController extends Controller
 
             return response()->json([
                 'status' => 1,
-                'service' => $service,
+                // 'service' => $service,
             ]);
         } catch (\Exception $e) {
 
