@@ -104,7 +104,7 @@ class AdminController extends Controller
     // Display the specified resource.
     public function show($id)
     {
-        $admin = Admin::where('admin_id', $id)->with('user')->with('categories')->get();
+        $admin = Admin::where('admin_id', $id)->with(['user', 'categories'])->get();
         return response()->json([
             'status' => 1,
             'admin' => $admin,

@@ -34,7 +34,12 @@ class AuthController extends Controller
         $this->EmailVerification($user);
         // event(new Registered($user));
 
-        $token = $user->createToken('api_token')->plainTextToken;
+        // $token = $user->createToken('register_token')->plainTextToken;
+        $token = $user->createToken(
+            'register_token',
+            ['*'],
+            now()->addHours(5)
+        )->plainTextToken;
 
         return response()->json([
             'status' => 1,
@@ -57,22 +62,19 @@ class AuthController extends Controller
     // Confirm the email verification code.
     public function confirmVerificationCode(VerifyRequest $request)
     {
-
-        $userId = $request->user()->id;
-        $verificationCode = Cache::get('verification_code:' . $userId);
+        $user = $request->user();
+        $verificationCode = Cache::get('verification_code:' . $user->id);
 
         if ($verificationCode && $verificationCode == $request['code']) {
-            $user = User::find($userId);
-            $user->email_verified_at = now();
-            $user->save();
+            if ($user->update(['email_verified_at' => now()])) {
 
-            // Clear the verification code from cache
-            Cache::forget('verification_code:' . $userId);
+                Cache::forget('verification_code:' . $user->id);
 
-            return response()->json([
-                'status' => 1,
-                'message' => 'تم تأكيد البريد الإلكتروني بنجاح.',
-            ]);
+                return response()->json([
+                    'status' => 1,
+                    'message' => 'تم تأكيد البريد الإلكتروني بنجاح.',
+                ]);
+            }
         }
 
         return response()->json([
@@ -88,7 +90,12 @@ class AuthController extends Controller
 
         if (auth()->attempt($credentials)) {
             $user = auth()->user();
-            $token = $request->user()->createToken('auth_token')->plainTextToken;
+            // $token = $request->user()->createToken('login_token')->plainTextToken;
+            $token = $user->createToken(
+                'login_token',
+                ['*'],
+                now()->addHours(5)
+            )->plainTextToken;
 
             return response()->json([
                 'status' => 1,
@@ -171,9 +178,15 @@ class AuthController extends Controller
 
             // event(new Registered($user));
             $this->EmailVerification($user);
-            
 
-            $token = $user->createToken('api_token')->plainTextToken;
+
+            // $token = $user->createToken('register_token')->plainTextToken;
+            $token = $user->createToken(
+                'register_token',
+                ['*'],
+                now()->addHours(5)
+            )->plainTextToken;
+
 
 
             return response()->json([
