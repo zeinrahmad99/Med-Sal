@@ -171,7 +171,7 @@ class AuthController extends Controller
             ]);
 
             // Store PDF files in public/documents
-            PDFs::storePDF($request->file('document'), $pdfName, 'public/documents/');
+            PDFs::storePDF($request->file('document'), $pdfName, '/documents');
 
             // $verificationCode = mt_rand(100000, 999999);
             // Cache::put('verification_code:' . $user->id, $verificationCode, 60);

@@ -93,7 +93,7 @@ class ProductController extends Controller
                         $filename = Images::giveImageRandomName($image);
 
                         // Move the uploaded image to a desired location
-                        Images::storeImage($image, $filename, 'public/images');
+                        Images::storeImage($image, $filename, '/images');
                         // $image->storeAs('public/images', $filename);
 
                         // Add the image filename to the array
@@ -144,14 +144,14 @@ class ProductController extends Controller
                     $existingImages = explode(',', $product->images);
 
                     foreach ($existingImages as $image) {
-                        Images::deleteImage($image, 'public/images');
+                        Images::deleteImage($image, '/images');
                     }
 
                     $data['images'] = [];
 
                     foreach ($request->file('images') as $image) {
                         $imageName = Images::giveImageRandomName($image);
-                        Images::storeImage($image, $imageName, 'public/images');
+                        Images::storeImage($image, $imageName, '/images');
                         $data['images'][] = $imageName;
                     }
 

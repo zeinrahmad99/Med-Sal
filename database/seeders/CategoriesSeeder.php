@@ -87,7 +87,7 @@ class CategoriesSeeder extends Seeder
                 'status' => 'active',
             ],
             [
-                'admin_id'=>10,
+                'admin_id'=>11,
                 'name' => 'Lab',
                 'name_ar' => 'مختبر',
                 'description' => 'Category for labs',

@@ -55,7 +55,7 @@ class Product extends Model
         $imageUrls = [];
 
         foreach ($images as $image) {
-            $imageUrls[] = "/storage/images/$image";
+            $imageUrls[] = "/images/$image";
         }
 
         return $imageUrls;

@@ -60,6 +60,6 @@ class Provider extends Model
     // we need to run this command on server php artisan storage:link
     public function getDocumentAttribute($value)
     {
-        return '/storage/documents/' . $value;
+        return '/documents/' . $value;
     }
 }

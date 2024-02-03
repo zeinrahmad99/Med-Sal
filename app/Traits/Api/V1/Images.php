@@ -16,15 +16,26 @@ trait Images
     // This function deletes an image file
     public static function deleteImage($image, string $path)
     {
-        Storage::delete($path . $image);
+        $imagePath = public_path($path . $image);
+        if (file_exists($imagePath)) {
+            unlink($imagePath);
+        }
     }
+    // public static function deleteImage($image, string $path)
+    // {
+    //     Storage::delete($path . $image);
+    // }
 
     // This function stores image files
     public static function storeImage($image, string $imageName, string $path)
     {
-        // $image->move($path, $imageName);
-        Storage::putFileAs($path, $image, $imageName);
+        $image->move(public_path($path), $imageName);
     }
+    // public static function storeImage($image, string $imageName, string $path)
+    // {
+    //     // $image->move($path, $imageName);
+    //     Storage::putFileAs($path, $image, $imageName);
+    // }
 
     public static function processImages($images)
     {
@@ -46,10 +57,10 @@ trait Images
         return $processedImages;
         // return implode(',', $processedImages);
     }
-    
+
     // do not remove, its for testing
 
-      // // Build the query for searching nearest services.
+    // // Build the query for searching nearest services.
     // public function buildQueryForNearestServices($latitude, $longitude, $distance, $sortByDistance)
     // {
     //     $query = $this->query
@@ -71,7 +82,7 @@ trait Images
     //     return $query;
     // }
 
-        // Build the query for searching services by location.
+    // Build the query for searching services by location.
     // public function buildQueryForLocationSearch($latitude, $longitude, $distance)
     // {
     //     $haversineFormula = $this->calculateHaversineDistance($latitude, $longitude, 'service_locations.latitude', 'service_locations.longitude');
@@ -155,7 +166,7 @@ trait Images
     //     ])->active();
     // }
 
-     // // Search doctors by service name within a category.
+    // // Search doctors by service name within a category.
     // public function searchDoctorsByServiceName($serviceName)
     // {
     //     return $this->query
@@ -169,7 +180,7 @@ trait Images
     //         ->active();
     // }
 
-      // Search services and products within a category by name.
+    // Search services and products within a category by name.
     //   public function searchServicesProductsByCategoryName($name)
     //   {
     //       return $this->query
@@ -180,7 +191,7 @@ trait Images
     //               'products' => fn($query) => $query->active(),
     //           ]);
     //   }
-    
+
     // Search services within a category by name.
     // public function searchServicesByCategoryName($name)
     // {
